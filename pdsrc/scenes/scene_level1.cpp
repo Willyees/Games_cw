@@ -7,6 +7,7 @@
 #include <iostream>
 #include <thread>
 #include <SFML\Graphics\View.hpp>
+#include <SFML\Audio\Music.hpp>
 #include "system_renderer.h"
 #include "system_physics.h"
 
@@ -18,6 +19,13 @@ static shared_ptr<Entity> score;
 
 
 void Level1Scene::Load() {
+	menu.theme.stop();
+	if (!this->theme.openFromFile("res/musics/mainTheme.ogg"))
+		cout << "Error: we not found music file";
+	this->theme.setLoop(true);
+	this->theme.setVolume(75);
+	this->theme.play();
+
   cout << " Scene 1 Load" << endl;
   ls::loadLevelFileJson("res/levels/untitled100.json");
 
@@ -144,6 +152,8 @@ void Level1Scene::Load() {
 }
 
 void Level1Scene::UnLoad() {
+
+  this->theme.stop();
   cout << "Scene 1 Unload" << endl;
   player.reset();
   ls::unload();
