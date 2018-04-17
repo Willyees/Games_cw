@@ -5,14 +5,20 @@
 #include "../components/cmp_blinking.h"
 #include "SFML/Graphics.hpp"
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML\Audio\Music.hpp>
 #include <iostream>
 #include "../animatedSprite.hpp"
 
 using namespace std;
 using namespace sf;
 
-
 void MenuScene::Load() {
+	if (!this->theme.openFromFile("res/musics/menuTheme.ogg"))
+		cout << "Error: we not found music file";
+	this->theme.setLoop(true);
+	this->theme.setVolume(75);
+	this->theme.play();
+
   cout << "Menu Load \n";
   {
 	
