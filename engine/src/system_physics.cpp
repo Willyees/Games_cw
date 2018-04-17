@@ -62,13 +62,10 @@ void my_contact_listener::BeginContact(b2Contact* contact)
 	//get fixture B body
 	Entity* entityB = static_cast<Entity*>(contact->GetFixtureB()->GetBody()->GetUserData());
 	if (entityA != NULL && entityB != NULL) {
-		CollisionHandler::startContact(entityA, entityB);
-		
+		Engine::getActiveScene()->collisionHandler(entityA, entityB);
 	}
 	
 }
 
-void my_contact_listener::EndContact(b2Contact* contact)
-{
-}
+void my_contact_listener::EndContact(b2Contact* contact){}
 

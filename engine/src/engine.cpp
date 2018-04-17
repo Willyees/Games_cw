@@ -8,6 +8,7 @@
 #include <iostream>
 #include <stdexcept>
 
+
 using namespace sf;
 using namespace std;
 Scene* Engine::_activeScene = nullptr;
@@ -156,6 +157,8 @@ void Scene::Render() {
 	
 }
 
+void Scene::collisionHandler(Entity * entityA, Entity * entityB){}
+
 void Scene::addScore(int score)
 {
 	scorePoints += score;
@@ -222,32 +225,3 @@ Scene::~Scene() { UnLoad(); }
 Scene::Scene() : scorePoints(0) {}
 
 
-void CollisionHandler::startContact(Entity * entityA, Entity * entityB)
-{
-	switch (entityA->entityType)
-	{
-	case EntityType::COIN:
-		switch (entityB->entityType)
-		{
-		case EntityType::PLAYER:
-			entityA->setForDelete();
-		default:
-			break;
-		}
-		
-
-		break;
-	default:
-		break;
-	}
-
-	switch (entityB->entityType)
-	{
-	case EntityType::COIN:
-		entityB->setForDelete();
-		Engine::getActiveScene()->addScore(10);
-		break;
-	default:
-		break;
-	}
-}

@@ -52,9 +52,9 @@ void SpriteComponentAnimated::update(double dt)
 
 	if (state != _parent->getState()) {//using state var instead of checking with the <map>.find() for faster check
 
-		if (_animations.find(_parent->getState()) == _animations.end())
+		if (_animations.find(_parent->getState()) == _animations.end() || _parent->getState() == "none")
 		{
-			cout << "state in the parent does not exists in the animations map" << endl;
+			//cout << "state in the parent does not exists in the animations map or no state" << endl;
 			return;
 		}
 		state = _parent->getState();

@@ -45,16 +45,18 @@ void PlayerPhysicsComponent::update(double dt) {
 		
       if (getVelocity().x < _maxVelocity.x && (pos.x + dt * _groundspeed) < ls::getWidth())
         impulse({(float)(dt * _groundspeed), 0});
+		_parent->setState("right");
     } else {
-		
-      if ((getVelocity().x > -_maxVelocity.x) && ((pos.x - dt * _groundspeed) > 50.0f))//assuming map starts at pos 0
+	  if ((getVelocity().x > -_maxVelocity.x) && ((pos.x - dt * _groundspeed) > 50.0f))//assuming map starts at pos 0
         impulse({-(float)(dt * _groundspeed), 0});
+	  _parent->setState("left");
     }
   } else {
+	  _parent->setState("none");
     // Dampen X axis movement
     dampen({0.9f, 1.0f});
   }
-
+  
   // Handle Jump
   if (Keyboard::isKeyPressed(Keyboard::Up)) {
     _grounded = isGrounded();
@@ -67,6 +69,7 @@ void PlayerPhysicsComponent::update(double dt) {
 
   //Are we in air?
   if (!_grounded) {
+	  _parent->setState("in air");
     // Check to see if we have landed yet
     _grounded = isGrounded();
     // disable friction while jumping

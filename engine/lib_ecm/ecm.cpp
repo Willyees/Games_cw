@@ -12,6 +12,10 @@ const std::set<std::string>& Entity::getTags() const { return _tags; }
 
 const std::string & Entity::getState() const { return _state; }
 
+void Entity::setState(string state) {
+	_state = state;
+}
+
 void Entity::update(double dt) {
   if (!_alive) {
     return;

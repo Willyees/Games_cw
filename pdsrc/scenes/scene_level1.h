@@ -14,4 +14,6 @@ public:
   void Update(const double& dt) override;
 
   void Render() override;
+
+  void collisionHandler(Entity* entityA, Entity* entityB) override;
 };

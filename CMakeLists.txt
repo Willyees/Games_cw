@@ -9,7 +9,6 @@ endif()
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project("Potato's Destiny_cw")
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -20,7 +19,7 @@ project("Potato's Destiny_cw")
 SET(OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/")
 # Ouput all DLLs from all libs into main build folder
 SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
-
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 #### Add External Dependencies ####
 # SFML - graphics library
 add_subdirectory("lib/sfml")
@@ -35,11 +34,12 @@ set(B2D_INCS "lib/b2d/Box2D/")
 link_directories("${CMAKE_BINARY_DIR}/lib/sfml/lib")
 
 
+
 file(GLOB_RECURSE RESOURCE_FILES "res/*.*")
 ####
 file(GLOB_RECURSE SOURCE_FILES engine/src/*.cpp engine/src/*.h)
 add_library(lib_engine STATIC ${SOURCE_FILES} ${RESOURCE_FILES})
-target_include_directories(lib_engine INTERFACE "${CMAKE_SOURCE_DIR}/engine/src/" PUBLIC SYSTEM ${B2D_INCS} )
+target_include_directories(lib_engine INTERFACE "${CMAKE_SOURCE_DIR}/engine/src/" PUBLIC SYSTEM ${B2D_INCS})
 target_link_libraries(lib_engine lib_tile_level_loader lib_maths lib_ecm Box2D sfml-graphics sfml-audio)
 
 ## Maths lib
@@ -63,6 +63,7 @@ target_link_libraries(lib_ecm PRIVATE lib_maths)
 # Jsonlib
 add_library(rapidjson INTERFACE)
 target_include_directories(rapidjson INTERFACE "${CMAKE_SOURCE_DIR}/lib/rapidjson")
+
 
 #### Add Practical Projects####
 
@@ -88,6 +89,12 @@ else()
           "${PROJECT_SOURCE_DIR}/res" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/res
           )
 endif()
+
+##Target to copy DLLs
+add_custom_target(copy_dlls ALL        # Adds a post-build event to MyTest
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
+        "${PROJECT_SOURCE_DIR}/lib/openal32.dll"      # <--this is in-file
+        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>)                 # <--this is out-file path
 
 #### Link Dependencies ####
 foreach (exe ${EXECUTABLES})

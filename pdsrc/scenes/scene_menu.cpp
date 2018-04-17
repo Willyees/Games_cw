@@ -59,22 +59,21 @@ void MenuScene::Load() {
   
   
   
-  //Animation a1;
-  //Texture p;
-  //p.loadFromFile("res/images/ezgif.com-gif-maker640widthtransparent2.png");
-  //textures->push_back(p);
-  //cout << &(textures->at(0)) << endl; 
-  //a1.setSpriteSheet(textures->at(0));//texture stored as pointer in the animation (needs an always available texture to look up)
-  //auto sprite = makeEntity(true);
-  //auto cmp = sprite->addComponent<SpriteComponentAnimated>();
-  //cmp->addFrames(a1, 41, 5, 640.0f, 480.0f, 0.0f);
-  //AnimatedSprite b(sf::seconds(0.05f), true, true);
-  //b.setPosition(Vector2f(300.0f, 300.0f));
-  //cmp->setSprite(b);
-  //cmp->getSprite().setAnimation(a1);
-  //
-  //cmp->addAnimation("idle", a1);
-  //sprite->setPosition(Vector2f(300.f, 300.f));
+  Animation a1;
+  Texture p;
+  p.loadFromFile("res/images/ezgif.com-gif-maker640widthtransparent2.png");
+  
+  auto sprite = makeEntity(true);
+  auto cmp = sprite->addComponent<SpriteComponentAnimated>();
+  a1.setSpriteSheet(*(cmp->addTexture(p)));
+  cmp->addFrames(a1, 41, 5, 640.0f, 480.0f, 0.0f);
+  AnimatedSprite b(sf::seconds(0.05f), true, true);
+  b.setPosition(Vector2f(300.0f, 300.0f));
+  cmp->setSprite(b);
+  cmp->getSprite().setAnimation(a1);
+  
+  cmp->addAnimation("idle", a1);
+  sprite->setPosition(Vector2f(300.f, 300.f));
   
   setLoaded(true);
 }

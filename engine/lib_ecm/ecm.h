@@ -71,6 +71,7 @@ public:
   void addTag(const std::string& t);
   const std::set<std::string>& getTags() const;
   const std::string& getState() const;
+  void setState(std::string state);
   Scene* const scene;
   Entity(Scene* const s, bool dynamic);
 

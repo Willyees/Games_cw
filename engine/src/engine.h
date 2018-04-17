@@ -16,16 +16,19 @@ public:
   virtual void UnLoad();
   virtual void Update(const double& dt);
   virtual void Render();
+  virtual void collisionHandler(Entity* entityA, Entity* entityB);
   void addScore(int score);
   sf::View* getView();
   bool isLoaded() const;
   std::shared_ptr<Entity> makeEntity(bool dynamic);
-
+  
   EntityManager ents;
   
 protected:
-  void setLoaded(bool);
-  int scorePoints;
+	int scorePoints;
+	
+	void setLoaded(bool);
+  
 private:
   mutable bool _loaded;
   mutable std::future<void> _loaded_future;
@@ -56,9 +59,3 @@ long long now();
 // Return time since last() was last called.
 long long last();
 } // namespace timing
-
-class CollisionHandler {
-public:
-	static void startContact(Entity* entityA, Entity* entityB);
-
-};

@@ -7,6 +7,7 @@ using namespace std;
 
 MenuScene menu;
 Level1Scene level1;
+GameOverScene gameOver;
 //Level2Scene level2;
 //Level3Scene level3;
 
