@@ -69,6 +69,16 @@ void Level1Scene::Load() {
 	cmp->addFrames(a_left, 41, 5, 150.0f, 113.0f, 0.0f);
 	cmp->addAnimation("left", a_left);
 	
+	Animation a_air_left;
+	a_air_left.setSpriteSheet(*(cmp->addTexture(p1)));
+	cmp->addFrames(a_air_left, 1, 1, 150.0f, 113.0f, 0.0f);
+	cmp->addAnimation("in air left", a_air_left);
+
+	Animation a_air_right;
+	a_air_right.setSpriteSheet(*(cmp->addTexture(p)));
+	cmp->addFrames(a_air_right, 1, 1, 150.0f, 113.0f, 0.0f);
+	cmp->addAnimation("in air right", a_air_right);
+
 	player->addComponent<PlayerPhysicsComponent>(Vector2f(50.0f, 75.f));
 	player->addComponent<LifeComponent>(3);
 	//set view to center on player
@@ -86,7 +96,7 @@ void Level1Scene::Load() {
   // Add coins
   {
 	  Texture p;
-	  p.loadFromFile("res/images/TileSet1.png");
+	  p.loadFromFile("res/images/coinsprite.png");
 	  
 	  Animation a;
 	  
@@ -101,10 +111,10 @@ void Level1Scene::Load() {
 		  coin_temp->setPosition(pos);
 		  auto s = coin_temp->addComponent<SpriteComponentAnimated>();
 		  a.setSpriteSheet(*(s->addTexture(p)));//adding texture internally and giving it to the animation as well
-		  s->addFrames(a, 5, 5, 16.0f, 16.0f, 0.0f);
-		  AnimatedSprite b(sf::seconds(0.05f), true, true);
+		  s->addFrames(a, 6, 6, 116.0f, 200.0f, 0.0f);
+		  AnimatedSprite b(sf::seconds(0.1f), true, true);
 		  s->setSprite(b);
-		  s->getSprite().setOrigin(8.0f, 8.0f);//needs to set origin because physics create box using center origin
+		  s->getSprite().setOrigin(58.0f, 100.0f);//needs to set origin because physics create box using center origin
 		 
 		  s->addAnimation("idle", a);
 		  coin_temp->entityType = EntityType::COIN;

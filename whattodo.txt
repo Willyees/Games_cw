@@ -12,3 +12,5 @@ Games Eng CW what to do:
 -add bullet from enemy(modify enemy_ai_cmp)
 
 
+TO Remember:
+All the external resources needs to be mentioned, so keep the link where you get them (for example: sounds, sprites, etc..)

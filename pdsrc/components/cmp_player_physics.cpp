@@ -45,11 +45,17 @@ void PlayerPhysicsComponent::update(double dt) {
 		
       if (getVelocity().x < _maxVelocity.x && (pos.x + dt * _groundspeed) < ls::getWidth())
         impulse({(float)(dt * _groundspeed), 0});
-		_parent->setState("right");
+		  if (!isGrounded())
+			  _parent->setState("in air right");
+		  else
+			_parent->setState("right");
     } else {
 	  if ((getVelocity().x > -_maxVelocity.x) && ((pos.x - dt * _groundspeed) > 50.0f))//assuming map starts at pos 0
         impulse({-(float)(dt * _groundspeed), 0});
-	  _parent->setState("left");
+		  if (!isGrounded()) 
+			  _parent->setState("in air left");
+		  else
+			_parent->setState("left");
     }
   } else {
 	  _parent->setState("none");
