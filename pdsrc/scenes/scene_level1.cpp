@@ -4,6 +4,7 @@
 #include "../components/cmp_text.h"
 #include "../components/cmp_life.h"
 #include "../components/cmp_enemy_turret.h"
+#include "../components/cmp_follow_pos.h"
 #include "../game.h"
 #include <LevelSystem.h>
 #include <iostream>
@@ -20,7 +21,7 @@ using namespace sf;
 static shared_ptr<Entity> player;
 static shared_ptr<Entity> score;
 static shared_ptr<Texture> background_text;
-
+static shared_ptr<Entity> masher;
 
 void Level1Scene::Load() {
 	menu.theme.stop();
@@ -36,7 +37,7 @@ void Level1Scene::Load() {
   auto ho = Engine::getWindowSize().y - (ls::getHeight() * 40.f);
   ls::setOffset(Vector2f(0, 0));//TODO:check how to use offset (before was set to ho)
  
-  //test size 
+  //background 
   {
 	  background_text = make_shared<Texture>();
 	  background_text->loadFromFile("res/images/kitchen background.jpg");
@@ -49,10 +50,6 @@ void Level1Scene::Load() {
 	  setBackground(s);
 		//s->getShape().setOrigin(Vector2f(200.0f, 200.0f));
 	  
-	  
-	  
-	  
-		
 		//test->addComponent<PlayerPhysicsComponent>(Vector2f(50.f, 50.f));
 
   }
@@ -93,7 +90,7 @@ void Level1Scene::Load() {
 	Animation a_left;
 	AnimatedSprite as_left(sf::seconds(0.05f), true, true);
 	Texture p1;
-	p1.loadFromFile("res/images/player_sprites/walk_left.png");
+	p1.loadFromFile("res/images/player_sprites/walk_left_1.png");
 	a_left.setSpriteSheet(*(cmp->addTexture(p1)));
 	cmp->addFrames(a_left, 41, 5, 180.0f, 135.4f, 0.0f);
 	as_left.setOrigin(90.0f, 67.7f);
@@ -146,19 +143,19 @@ void Level1Scene::Load() {
 	  for (auto c : coins){
 		  
 		  Vector2f pos = ls::getTilePosition(c);
-		  pos += Vector2f(8.0f, 8.0f);
+		  pos -= Vector2f(25.0f, 43.0f);
 		  shared_ptr<Entity> coin_temp = makeEntity(true);
 		  coin_temp->setPosition(pos);
 		  auto s = coin_temp->addComponent<SpriteComponentAnimated>();
 		  a.setSpriteSheet(*(s->addTexture(p)));//adding texture internally and giving it to the animation as well
-		  s->addFrames(a, 6, 6, 116.0f, 200.0f, 0.0f);
+		  s->addFrames(a, 6, 6, 50.0f, 86.0f, 0.0f);
 		  AnimatedSprite b(sf::seconds(0.1f), true, true);
 		  
-		  s->getSprite().setOrigin(58.0f, 100.0f);//needs to set origin because physics create box using center origin
+		  s->getSprite().setOrigin(25.0f, 43.0f);//needs to set origin because physics create box using center origin
 		 
 		  s->addSprite("idle", b, a);
 		  coin_temp->entityType = EntityType::COIN;
-		  coin_temp->addComponent<PhysicsComponent>(false, Vector2f(16.0f,16.0f));
+		  coin_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f,40.0f));
 	  }
   }
   //add saw enemy
@@ -194,17 +191,28 @@ void Level1Scene::Load() {
 	    
 	    auto enemies = ls::findTiles(ls::ENEMY)[1];
 		Vector2f pos = ls::getTilePosition(enemies);
-		shared_ptr<Entity> enemy_temp = makeEntity(true);
-		enemy_temp->setPosition(pos);
-		auto s = enemy_temp->addComponent<SpriteComponentAnimated>();
+		masher = makeEntity(true);
+		masher->setPosition(pos);
+		auto s = masher->addComponent<SpriteComponentAnimated>();
+		a.addFrame(IntRect());
 		s->addFrames(a, 11, 5, 179.0f, 435.0f, 0.0f);
 		AnimatedSprite b(sf::seconds(0.1f), true, true);
 		b.setOrigin(89.5f, 217.5f);//needs to set origin because physics create box using center origin
 		a.setSpriteSheet(*(s->addTexture(p)));
 		s->addSprite("idle", b, a);
-		enemy_temp->entityType = EntityType::ENEMY;
+		masher->entityType = EntityType::ENEMY;
 		//enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
 
+  }
+  //test follow masher
+  {
+	  shared_ptr<Entity> testmas = makeEntity(true);
+	  
+	  	  shared_ptr<ShapeComponent> s = testmas->addComponent<ShapeComponent>();
+	  	  s->setShape<sf::RectangleShape>(Vector2f(50.f, 30.f));
+	  	  s->getShape().setFillColor(Color::Magenta);
+	  	  s->getShape().setOrigin(Vector2f(25.0f, 0.0f));
+		  testmas->addComponent<FollowPosComponent>(&(*masher));
   }
   // Add physics colliders to level tiles.
   {
