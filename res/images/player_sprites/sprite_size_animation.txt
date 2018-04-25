@@ -1,0 +1,3 @@
+spritesheet size: 750;1016
+cmp->addFrames(a_idle, 1, 1, 150.0f, 113.0f, 0.0f);
+player->addComponent<PlayerPhysicsComponent>(Vector2f(50.0f, 75.f));

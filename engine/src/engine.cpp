@@ -170,6 +170,17 @@ sf::View* Scene::getView()
 	return &Renderer::view;
 }
 
+std::shared_ptr<Sprite> Scene::getBackground()
+{
+	return _background;
+}
+
+void Scene::setBackground(sf::Sprite& background)
+{
+	_background.reset();
+	_background = make_shared<Sprite>(background);
+}
+
 bool Scene::isLoaded() const {
   {
     std::lock_guard<std::mutex> lck(_loaded_mtx);

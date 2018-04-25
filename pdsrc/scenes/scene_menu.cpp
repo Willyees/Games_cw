@@ -72,7 +72,7 @@ void MenuScene::Load() {
   cmp->setSprite(b);
   cmp->getSprite().setAnimation(a1);
   
-  cmp->addAnimation("idle", a1);
+  //cmp->addAnimation("idle", a1);
   sprite->setPosition(Vector2f(300.f, 300.f));
   
   setLoaded(true);

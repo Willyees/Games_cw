@@ -9,8 +9,9 @@
 class SpriteComponentAnimated : public Component {
 protected:
 	Animation* _currentAnimation;
-	std::map<std::string, Animation> _animations;
-	std::shared_ptr<AnimatedSprite> _sprite;
+	std::shared_ptr<AnimatedSprite> _currentSprite;
+	std::vector<Animation> _animations;
+	std::map<std::string, AnimatedSprite> _sprites;
 	std::shared_ptr<std::vector<sf::Texture>> _texture;
 	std::string state;
 public:
@@ -22,10 +23,10 @@ public:
 	sf::Texture* addTexture(sf::Texture& texture);
 	
 	AnimatedSprite& getSprite() const;
-	void addAnimation(std::string key, Animation animation);
+	void addSprite(std::string key, AnimatedSprite sprite, Animation animation);
 	void addFrames(Animation& a, int frames, int rowlength, float width, float height, float initHeight);
 	template <typename... Targs> void setSprite(Targs... params) {
-		_sprite.reset(new AnimatedSprite(params...));
+		_currentSprite.reset(new AnimatedSprite(params...));
 	}
 };
 
@@ -36,7 +37,7 @@ protected:
 
 public:
   SpriteComponent() = delete;
-
+  sf::Texture* setTexture(sf::Texture& texture);
   explicit SpriteComponent(Entity* p);
   void update(double dt) override;
   void render() override;

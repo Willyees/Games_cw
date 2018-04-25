@@ -19,6 +19,7 @@ using namespace sf;
 //might use weak pointer to not increase use count and let destroy the entity from the isfordelete() (ecm.cpp)
 static shared_ptr<Entity> player;
 static shared_ptr<Entity> score;
+static shared_ptr<Texture> background_text;
 
 
 void Level1Scene::Load() {
@@ -35,56 +36,95 @@ void Level1Scene::Load() {
   auto ho = Engine::getWindowSize().y - (ls::getHeight() * 40.f);
   ls::setOffset(Vector2f(0, 0));//TODO:check how to use offset (before was set to ho)
  
+  //test size 
+  {
+	  background_text = make_shared<Texture>();
+	  background_text->loadFromFile("res/images/kitchen background.jpg");
+	  /*shared_ptr<Sprite> test = make_shared<Sprite>(*p);*/
+	  Sprite s(*background_text);
+	  
+	  /*auto s = test->addComponent<SpriteComponent>();
+	  s->setSprite(Sprite(*(s->setTexture(p))));*/
+	  s.setPosition(Vector2f(0,200));
+	  setBackground(s);
+		//s->getShape().setOrigin(Vector2f(200.0f, 200.0f));
+	  
+	  
+	  
+	  
+		
+		//test->addComponent<PlayerPhysicsComponent>(Vector2f(50.f, 50.f));
+
+  }
+
+
   // Create player
   {
-    player = makeEntity(true);
-	player->entityType = EntityType::PLAYER;
-	player->addTag("player");//adding tag to let turret component find the player and shoot at him
-    player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
-	
-	Animation a_right;
-	Texture p;
-	p.loadFromFile("res/images/ezgif.com-gif-maker150widthtransparent.png");
+	  player = makeEntity(true);
+	  player->entityType = EntityType::PLAYER;
+	  player->addTag("player");//adding tag to let turret component find the player and shoot at him
+	  player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 
-	auto cmp = player->addComponent<SpriteComponentAnimated>();
-	a_right.setSpriteSheet(*(cmp->addTexture(p)));
-	//cmp->addFrames(a1, 41, 5, 640.0f, 480.0f, 0.0f);
-	cmp->addFrames(a_right, 41, 5, 150.0f, 113.0f, 0.0f);
-	AnimatedSprite b(sf::seconds(0.05f), true, true);
-	b.setPosition(Vector2f(300.0f, 300.0f));
-	cmp->setSprite(b);
-	cmp->getSprite().setAnimation(a_right);
-	cmp->getSprite().setOrigin(75.0f, 56.0f);//needs to set origin because physics create box using center origin
-	cmp->addAnimation("right", a_right);
-    
-	Animation a_idle;
-	a_idle.setSpriteSheet(*(cmp->addTexture(p)));
-	cmp->addFrames(a_idle, 1, 1, 150.0f, 113.0f, 0.0f);
-	cmp->addAnimation("idle", a_idle);
+	  Animation a_right;
+	  Texture p;
+	  p.loadFromFile("res/images/player_sprites/walk_right.png");
 
+	  auto cmp = player->addComponent<SpriteComponentAnimated>();
+	  a_right.setSpriteSheet(*(cmp->addTexture(p)));
+	  //cmp->addFrames(a1, 41, 5, 640.0f, 480.0f, 0.0f);
+	  cmp->addFrames(a_right, 41, 5, 180.0f, 135.4f, 0.0f);
+	  AnimatedSprite as_right(sf::seconds(0.05f), true, true);
+	  as_right.setOrigin(90.0f, 67.7f);
+	  cmp->addSprite("right", as_right, a_right);
+	  
+	  
+	  //cmp->getSprite().setOrigin(90.0f, 67.7f);//needs to set origin because physics create box using center origin
+	  
+
+	  Animation a_idle;
+	  AnimatedSprite as_idle(sf::seconds(0.05f), true, true);//seconds, paused, looped
+	  a_idle.setSpriteSheet(*(cmp->addTexture(p)));
+	  cmp->addFrames(a_idle, 1, 5, 180.0f, 135.4f, 0.0f);
+	  as_idle.setOrigin(90.0f, 67.7f);
+	  cmp->addSprite("idle", as_idle, a_idle);
+	  
+
+  
 	Animation a_left;
+	AnimatedSprite as_left(sf::seconds(0.05f), true, true);
 	Texture p1;
-	p1.loadFromFile("res/images/ezgif.com-gif-maker150widthtransparentleft.png");
+	p1.loadFromFile("res/images/player_sprites/walk_left.png");
 	a_left.setSpriteSheet(*(cmp->addTexture(p1)));
-	cmp->addFrames(a_left, 41, 5, 150.0f, 113.0f, 0.0f);
-	cmp->addAnimation("left", a_left);
+	cmp->addFrames(a_left, 41, 5, 180.0f, 135.4f, 0.0f);
+	as_left.setOrigin(90.0f, 67.7f);
+	cmp->addSprite("left", as_left, a_left);
 	
+
+	Texture p2;
+	p2.loadFromFile("res/images/player_sprites/jumpL.png");
 	Animation a_air_left;
-	a_air_left.setSpriteSheet(*(cmp->addTexture(p1)));
-	cmp->addFrames(a_air_left, 1, 1, 150.0f, 113.0f, 0.0f);
-	cmp->addAnimation("in air left", a_air_left);
+	AnimatedSprite as_air_left(sf::seconds(0.025f), true, false);
+	a_air_left.setSpriteSheet(*(cmp->addTexture(p2)));
+	cmp->addFrames(a_air_left, 41, 5, 180.0f, 135.4f, 0.0f);
+	cmp->addSprite("in air left", as_air_left, a_air_left);
+
+	
 
 	Animation a_air_right;
-	a_air_right.setSpriteSheet(*(cmp->addTexture(p)));
-	cmp->addFrames(a_air_right, 1, 1, 150.0f, 113.0f, 0.0f);
-	cmp->addAnimation("in air right", a_air_right);
+	Texture p3;
+	AnimatedSprite as_air_right(sf::seconds(0.025f), true, false);
+	p3.loadFromFile("res/images/player_sprites/jumpR.png");
+	a_air_right.setSpriteSheet(*(cmp->addTexture(p3)));
+	cmp->addFrames(a_air_right, 41, 5, 180.0f, 135.4f, 0.0f);
+	as_air_right.setOrigin(90.0f, 67.7f);
+	cmp->addSprite("in air right", as_air_right,a_air_right);
 
-	player->addComponent<PlayerPhysicsComponent>(Vector2f(50.0f, 75.f));
+	player->addComponent<PlayerPhysicsComponent>(Vector2f(60.0f, 90.0f));
 	player->addComponent<LifeComponent>(3);
 	//set view to center on player
 	Renderer::view.reset(sf::FloatRect(player->getPosition().x, player->getPosition().y, 1280.0f, 800.f));
 	
-  }
+	}
   //score
   {
 	  score = makeEntity(false);
@@ -113,17 +153,59 @@ void Level1Scene::Load() {
 		  a.setSpriteSheet(*(s->addTexture(p)));//adding texture internally and giving it to the animation as well
 		  s->addFrames(a, 6, 6, 116.0f, 200.0f, 0.0f);
 		  AnimatedSprite b(sf::seconds(0.1f), true, true);
-		  s->setSprite(b);
+		  
 		  s->getSprite().setOrigin(58.0f, 100.0f);//needs to set origin because physics create box using center origin
 		 
-		  s->addAnimation("idle", a);
+		  s->addSprite("idle", b, a);
 		  coin_temp->entityType = EntityType::COIN;
 		  coin_temp->addComponent<PhysicsComponent>(false, Vector2f(16.0f,16.0f));
-		  
-		  
 	  }
   }
+  //add saw enemy
+  {
+	  Texture p;
+	    p.loadFromFile("res/images/blade.png");
+	    //add enemy texture to "textures"
+	    Animation a;
+	    
+	    auto enemies = ls::findTiles(ls::ENEMY)[0];
+		Vector2f pos = ls::getTilePosition(enemies);
+		shared_ptr<Entity> enemy_temp = makeEntity(true);
+		enemy_temp->setPosition(pos);
+		auto s = enemy_temp->addComponent<SpriteComponentAnimated>();
+		s->addFrames(a, 5, 2, 300.0f, 306.0f, 0.0f);
+		AnimatedSprite b(sf::seconds(0.05f), true, true);
+		b.setOrigin(150.0f, 153.0f);//needs to set origin because physics create box using center origin
+		a.setSpriteSheet(*(s->addTexture(p)));
+		s->addSprite("idle", b, a);
+		enemy_temp->entityType = EntityType::ENEMY;
+		enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
+		//enemy_temp->addComponent<EnemyTurretComponent>();
+	    
+	  	  
+  }
 
+  //add masher enemy 
+  {
+		Texture p;
+	    p.loadFromFile("res/images/masher.png");
+	    //add enemy texture to "textures"
+	    Animation a;
+	    
+	    auto enemies = ls::findTiles(ls::ENEMY)[1];
+		Vector2f pos = ls::getTilePosition(enemies);
+		shared_ptr<Entity> enemy_temp = makeEntity(true);
+		enemy_temp->setPosition(pos);
+		auto s = enemy_temp->addComponent<SpriteComponentAnimated>();
+		s->addFrames(a, 11, 5, 179.0f, 435.0f, 0.0f);
+		AnimatedSprite b(sf::seconds(0.1f), true, true);
+		b.setOrigin(89.5f, 217.5f);//needs to set origin because physics create box using center origin
+		a.setSpriteSheet(*(s->addTexture(p)));
+		s->addSprite("idle", b, a);
+		enemy_temp->entityType = EntityType::ENEMY;
+		//enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
+
+  }
   // Add physics colliders to level tiles.
   {
     auto walls = ls::findTiles(ls::WALL);
@@ -149,37 +231,36 @@ void Level1Scene::Load() {
 
   }
 
-  //Enemy
-  {
-	  
-	  Texture p;
-	  p.loadFromFile("res/images/TileSet1.png");
-	  //add enemy texture to "textures"
-	  
-	  Animation a;
-	  
-	  auto enemies = ls::findTiles(ls::ENEMY);
-	  for (auto e : enemies) {
-		  Vector2f pos = ls::getTilePosition(e);
-		  pos += Vector2f(8.0f, 8.0f);
-		  shared_ptr<Entity> enemy_temp = makeEntity(true);
-		  enemy_temp->setPosition(pos);
-		  auto s = enemy_temp->addComponent<SpriteComponentAnimated>();
+ // //Enemy
+ // {
+	//  
+	//  Texture p;
+	//  p.loadFromFile("res/images/TileSet1.png");
+	//  //add enemy texture to "textures"
+	//  
+	//  Animation a;
+	//  
+	//  auto enemies = ls::findTiles(ls::ENEMY);
+	//  for (auto e : enemies) {
+	//	  Vector2f pos = ls::getTilePosition(e);
+	//	  pos += Vector2f(8.0f, 8.0f);
+	//	  shared_ptr<Entity> enemy_temp = makeEntity(true);
+	//	  enemy_temp->setPosition(pos);
+	//	  auto s = enemy_temp->addComponent<SpriteComponentAnimated>();
 
-		  s->addFrames(a, 10, 5, 16.0f, 16.0f, 0.0f);
-		  AnimatedSprite b(sf::seconds(0.05f), true, true);
-		  s->setSprite(b);
-		  s->getSprite().setOrigin(8.0f, 8.0f);//needs to set origin because physics create box using center origin
-		  a.setSpriteSheet(*(s->addTexture(p)));
-		  s->addAnimation("idle", a);
-		  enemy_temp->entityType = EntityType::ENEMY;
-		  enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(16.0f, 16.0f));
-		  enemy_temp->addComponent<EnemyTurretComponent>();
-		  
-		  
+	//	  s->addFrames(a, 10, 5, 16.0f, 16.0f, 0.0f);
+	//	  AnimatedSprite b(sf::seconds(0.05f), true, true);
+	//	  s->getSprite().setOrigin(8.0f, 8.0f);//needs to set origin because physics create box using center origin
+	//	  a.setSpriteSheet(*(s->addTexture(p)));
+	//	  s->addSprite("idle", b, a);
+	//	  enemy_temp->entityType = EntityType::ENEMY;
+	//	  enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(16.0f, 16.0f));
+	//	  enemy_temp->addComponent<EnemyTurretComponent>();
+	//	  
+	//	  
 
-	  }
-  }
+	//  }
+ // }
 
   //Simulate long loading times
   //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
@@ -216,7 +297,7 @@ void Level1Scene::Update(const double& dt) {
 	  //change scene and unload everything
 	  Engine::GetWindow().close();
   }
-  score->get_components<TextComponent>()[0]->SetText("Score " + std::to_string(scorePoints));
+  //score->get_components<TextComponent>()[0]->SetText("Score " + std::to_string(scorePoints));
   
   Renderer::view.setCenter(player->getPosition().x, player->getPosition().y);
   
@@ -225,8 +306,12 @@ void Level1Scene::Update(const double& dt) {
 }
 
 void Level1Scene::Render() {
-  ls::render(Engine::GetWindow());
+  if (_background != nullptr) {
+	  Engine::GetWindow().draw(*_background);
+  }
   Scene::Render();
+  ls::render(Engine::GetWindow());
+  
 }
 
 void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)

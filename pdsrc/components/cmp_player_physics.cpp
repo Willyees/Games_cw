@@ -32,7 +32,7 @@ bool PlayerPhysicsComponent::isGrounded() const {
 void PlayerPhysicsComponent::update(double dt) {
 
   const auto pos = _parent->getPosition();
-
+  static string previous;
   //Teleport to start if we fall off map.
   if (pos.y > ls::getHeight() * ls::getTileSize()) {
     teleport(ls::getTilePosition(ls::findTiles(ls::START)[0]));
@@ -46,16 +46,22 @@ void PlayerPhysicsComponent::update(double dt) {
       if (getVelocity().x < _maxVelocity.x && (pos.x + dt * _groundspeed) < ls::getWidth())
         impulse({(float)(dt * _groundspeed), 0});
 		  if (!isGrounded())
-			  _parent->setState("in air right");
+			  if (previous == "in air right" || previous == "in air right")
+				  _parent->setState(previous);
+			  else
+				  _parent->setState("none");
 		  else
 			_parent->setState("right");
     } else {
 	  if ((getVelocity().x > -_maxVelocity.x) && ((pos.x - dt * _groundspeed) > 50.0f))//assuming map starts at pos 0
         impulse({-(float)(dt * _groundspeed), 0});
-		  if (!isGrounded()) 
-			  _parent->setState("in air left");
+	  if (!isGrounded())
+		  if (previous == "in air right" || previous == "in air right")
+			  _parent->setState(previous);
 		  else
-			_parent->setState("left");
+			  _parent->setState("none");
+	  else
+		_parent->setState("left");
     }
   } else {
 	  _parent->setState("none");
@@ -66,6 +72,8 @@ void PlayerPhysicsComponent::update(double dt) {
   // Handle Jump
   if (Keyboard::isKeyPressed(Keyboard::Up)) {
     _grounded = isGrounded();
+	_parent->setState("in air right");
+	previous = "in air right";
     if (_grounded) {
       setVelocity(Vector2f(getVelocity().x, 0.f));
       teleport(Vector2f(pos.x, pos.y - 2.0f));
@@ -75,7 +83,7 @@ void PlayerPhysicsComponent::update(double dt) {
 
   //Are we in air?
   if (!_grounded) {
-	  _parent->setState("in air");
+	  _parent->setState(previous);
     // Check to see if we have landed yet
     _grounded = isGrounded();
     // disable friction while jumping
@@ -83,7 +91,7 @@ void PlayerPhysicsComponent::update(double dt) {
   } else {
     setFriction(0.1f);
   }
-
+  cout << _parent->getState() << endl;
   // Clamp velocity.
   auto v = getVelocity();
   v.x = copysign(min(abs(v.x), _maxVelocity.x), v.x);

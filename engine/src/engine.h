@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <ecm.h>
 #include <future>
 #include <maths.h>
@@ -19,6 +20,8 @@ public:
   virtual void collisionHandler(Entity* entityA, Entity* entityB);
   void addScore(int score);
   sf::View* getView();
+  std::shared_ptr<sf::Sprite> getBackground();
+  void setBackground(sf::Sprite& background);
   bool isLoaded() const;
   std::shared_ptr<Entity> makeEntity(bool dynamic);
   
@@ -26,13 +29,14 @@ public:
   
 protected:
 	int scorePoints;
-	
+	std::shared_ptr<sf::Sprite> _background;
 	void setLoaded(bool);
   
 private:
   mutable bool _loaded;
   mutable std::future<void> _loaded_future;
   mutable std::mutex _loaded_mtx;
+  bool _backgroundBool;
 };
 
 class Engine {

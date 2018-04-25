@@ -1,6 +1,6 @@
 #include "system_renderer.h"
 #include <queue>
-
+#include "engine.h"
 #include <LevelSystem.h>
 #include <iostream>
 
@@ -29,7 +29,7 @@ void Renderer::render() {
   if (rw == nullptr) {
     throw("No render window set! ");
   }
-
+  
   rw->setView(rw->getDefaultView());
   while (!spritesStatic.empty()) {
 	  rw->draw(*spritesStatic.front());
