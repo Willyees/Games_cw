@@ -102,7 +102,8 @@ void Level1Scene::Load() {
 	Animation a_air_left;
 	AnimatedSprite as_air_left(sf::seconds(0.025f), true, false);
 	a_air_left.setSpriteSheet(*(cmp->addTexture(p2)));
-	cmp->addFrames(a_air_left, 41, 5, 180.0f, 135.4f, 0.0f);
+	cmp->addFrames(a_air_left, 45, 6, 180.0f, 135.4f, 0.0f);
+	as_air_left.setOrigin(90.0f, 67.7f);
 	cmp->addSprite("in air left", as_air_left, a_air_left);
 
 	
@@ -139,11 +140,12 @@ void Level1Scene::Load() {
 	  
 	  auto coins = ls::findTiles(ls::COIN);
 	  
-	 
+	 //setting coins using top left position (of levelsysytem coin TILE) as center for the coin sprite.
+	 //using different physics component size because has pixel that are not coin only
 	  for (auto c : coins){
 		  
 		  Vector2f pos = ls::getTilePosition(c);
-		  pos -= Vector2f(25.0f, 43.0f);
+		  //pos -= Vector2f(20.0f, 20.0f);
 		  shared_ptr<Entity> coin_temp = makeEntity(true);
 		  coin_temp->setPosition(pos);
 		  auto s = coin_temp->addComponent<SpriteComponentAnimated>();
@@ -151,9 +153,9 @@ void Level1Scene::Load() {
 		  s->addFrames(a, 6, 6, 50.0f, 86.0f, 0.0f);
 		  AnimatedSprite b(sf::seconds(0.1f), true, true);
 		  
-		  s->getSprite().setOrigin(25.0f, 43.0f);//needs to set origin because physics create box using center origin
-		 
+		  b.setOrigin(25.0f, 43.0f);//needs to set origin because physics create box using center origin
 		  s->addSprite("idle", b, a);
+		  
 		  coin_temp->entityType = EntityType::COIN;
 		  coin_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f,40.0f));
 	  }
@@ -184,9 +186,9 @@ void Level1Scene::Load() {
 
   //add masher enemy 
   {
-		Texture p;
-	    p.loadFromFile("res/images/masher.png");
-	    //add enemy texture to "textures"
+		Texture chain;
+	    chain.loadFromFile("res/images/chain.png");
+		
 	    Animation a;
 	    
 	    auto enemies = ls::findTiles(ls::ENEMY)[1];
@@ -194,11 +196,21 @@ void Level1Scene::Load() {
 		masher = makeEntity(true);
 		masher->setPosition(pos);
 		auto s = masher->addComponent<SpriteComponentAnimated>();
-		a.addFrame(IntRect());
-		s->addFrames(a, 11, 5, 179.0f, 435.0f, 0.0f);
+		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 64.0f));
+		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 86.0f));
+		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 132.0f));
+		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 171.0f));
+		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 203.0f));
+		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 244.0f));
+		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 263.0f));
+		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 263.0f));
+		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 284.0f));
+		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 336.0f));
+		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 372.0f));
+		/*s->addFrames(a, 11, 5, 179.0f, 435.0f, 0.0f);*/
 		AnimatedSprite b(sf::seconds(0.1f), true, true);
-		b.setOrigin(89.5f, 217.5f);//needs to set origin because physics create box using center origin
-		a.setSpriteSheet(*(s->addTexture(p)));
+		//b.setOrigin(89.5f, 217.5f);//needs to set origin because physics create box using center origin
+		a.setSpriteSheet(*(s->addTexture(chain)));
 		s->addSprite("idle", b, a);
 		masher->entityType = EntityType::ENEMY;
 		//enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
@@ -206,13 +218,14 @@ void Level1Scene::Load() {
   }
   //test follow masher
   {
-	  shared_ptr<Entity> testmas = makeEntity(true);
+	Texture p;
+	p.loadFromFile("res/images/masher_bottom.png");
 	  
-	  	  shared_ptr<ShapeComponent> s = testmas->addComponent<ShapeComponent>();
-	  	  s->setShape<sf::RectangleShape>(Vector2f(50.f, 30.f));
-	  	  s->getShape().setFillColor(Color::Magenta);
-	  	  s->getShape().setOrigin(Vector2f(25.0f, 0.0f));
-		  testmas->addComponent<FollowPosComponent>(&(*masher));
+	shared_ptr<Entity> testmas = makeEntity(true);
+	shared_ptr<SpriteComponent> s = testmas->addComponent<SpriteComponent>();
+	s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 126, 66)));
+	s->getSprite().setOrigin(Vector2f(63.0f, 0.0f));
+	testmas->addComponent<FollowPosComponent>(&(*masher));
   }
   // Add physics colliders to level tiles.
   {

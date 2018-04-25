@@ -46,23 +46,27 @@ void PlayerPhysicsComponent::update(double dt) {
       if (getVelocity().x < _maxVelocity.x && (pos.x + dt * _groundspeed) < ls::getWidth())
         impulse({(float)(dt * _groundspeed), 0});
 		  if (!isGrounded())
-			  if (previous == "in air right" || previous == "in air right")
+			  if (previous == "in air right" || previous == "in air left")
 				  _parent->setState(previous);
 			  else
 				  _parent->setState("none");
-		  else
-			_parent->setState("right");
+		  else {
+			 _parent->setState("right");
+			 previous = "right";
+		  }
     } else {
 	  if ((getVelocity().x > -_maxVelocity.x) && ((pos.x - dt * _groundspeed) > 50.0f))//assuming map starts at pos 0
         impulse({-(float)(dt * _groundspeed), 0});
 	  if (!isGrounded())
-		  if (previous == "in air right" || previous == "in air right")
+		  if (previous == "in air right" || previous == "in air left")
 			  _parent->setState(previous);
 		  else
 			  _parent->setState("none");
-	  else
+	  else{
 		_parent->setState("left");
-    }
+		previous = "left";
+	  }
+	}
   } else {
 	  _parent->setState("none");
     // Dampen X axis movement
@@ -72,8 +76,14 @@ void PlayerPhysicsComponent::update(double dt) {
   // Handle Jump
   if (Keyboard::isKeyPressed(Keyboard::Up)) {
     _grounded = isGrounded();
-	_parent->setState("in air right");
-	previous = "in air right";
+	if (previous == "right") {
+		_parent->setState("in air right");
+		previous = "in air right";
+	}
+	if (previous == "left") {
+		_parent->setState("in air left");
+		previous = "in air left";
+	}
     if (_grounded) {
       setVelocity(Vector2f(getVelocity().x, 0.f));
       teleport(Vector2f(pos.x, pos.y - 2.0f));
@@ -91,7 +101,7 @@ void PlayerPhysicsComponent::update(double dt) {
   } else {
     setFriction(0.1f);
   }
-  cout << _parent->getState() << endl;
+  
   // Clamp velocity.
   auto v = getVelocity();
   v.x = copysign(min(abs(v.x), _maxVelocity.x), v.x);
