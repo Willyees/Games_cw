@@ -4,7 +4,9 @@
 class LifeComponent : public Component {
 private:
 	int _lives;
-
+	std::string _state;
+	bool _damaged;
+	float _invincibleTime;
 public:
 	void update(double dt) override;
 	void render() override {};

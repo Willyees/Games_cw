@@ -5,6 +5,7 @@
 #include "../components/cmp_life.h"
 #include "../components/cmp_enemy_turret.h"
 #include "../components/cmp_follow_pos.h"
+#include "../components/cmp_hurt_player.h"
 #include "../game.h"
 #include <LevelSystem.h>
 #include <iostream>
@@ -179,6 +180,7 @@ void Level1Scene::Load() {
 		s->addSprite("idle", b, a);
 		enemy_temp->entityType = EntityType::ENEMY;
 		enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
+		enemy_temp->addComponent<HurtComponent>();
 		//enemy_temp->addComponent<EnemyTurretComponent>();
 	    
 	  	  
@@ -216,16 +218,17 @@ void Level1Scene::Load() {
 		//enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
 
   }
-  //test follow masher
+  //masherbottom
   {
 	Texture p;
 	p.loadFromFile("res/images/masher_bottom.png");
 	  
-	shared_ptr<Entity> testmas = makeEntity(true);
-	shared_ptr<SpriteComponent> s = testmas->addComponent<SpriteComponent>();
+	shared_ptr<Entity> masher_bottom = makeEntity(true);
+	shared_ptr<SpriteComponent> s = masher_bottom->addComponent<SpriteComponent>();
 	s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 126, 66)));
 	s->getSprite().setOrigin(Vector2f(63.0f, 0.0f));
-	testmas->addComponent<FollowPosComponent>(&(*masher));
+	masher_bottom->addComponent<FollowPosComponent>(&(*masher));
+	masher_bottom->addComponent<HurtComponent>();
   }
   // Add physics colliders to level tiles.
   {
@@ -316,7 +319,8 @@ void Level1Scene::Update(const double& dt) {
   //not the cleanest way to update the score points
   if (!player->isAlive()) {
 	  //change scene and unload everything
-	  Engine::GetWindow().close();
+	  Engine::ChangeScene((Scene*)&gameOver);
+	  return;
   }
   //score->get_components<TextComponent>()[0]->SetText("Score " + std::to_string(scorePoints));
   
