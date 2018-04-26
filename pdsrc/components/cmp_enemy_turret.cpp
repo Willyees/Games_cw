@@ -26,12 +26,24 @@ void EnemyTurretComponent::fire() const {
 	bullet->setPosition(_parent->getPosition());
 	bullet->addComponent<HurtComponent>();
 	bullet->addComponent<BulletComponent>();
-	auto s = bullet->addComponent<ShapeComponent>();
+	
+	auto s = bullet->addComponent<SpriteComponentAnimated>();
+	Texture p1;
+	p1.loadFromFile("res/images/chef_knife50.png");
+	Animation a;
+	s->addFrames(a, 4, 1, 50.0f, 44.75f,0.0f);
 
+	AnimatedSprite as(sf::seconds(0.05f), true, true);
+	a.setSpriteSheet(*(s->addTexture(p1)));
+	as.setOrigin(25.f, 22.4f);
+	s->addSprite("idle", as, a);
+
+	
+	/*auto s = bullet->addComponent<ShapeComponent>();
 	s->setShape<sf::CircleShape>(8.f);
 	s->getShape().setFillColor(Color::Red);
-	s->getShape().setOrigin(8.f, 8.f);
-	auto p = bullet->addComponent<PhysicsComponent>(true, Vector2f(8.f, 8.f));
+	*/
+	auto p = bullet->addComponent<PhysicsComponent>(true, Vector2f(50.f, 44.75f));
 	p->setRestitution(.4f);
 	p->setFriction(.005f);
 	if (auto pl = _player.lock()) {

@@ -59,6 +59,7 @@ public:
 	explicit SpriteComponentRepeted(Entity* p, int repetition);
 	void update(double dt) override;
 	void render() override;
+	void decreaseRep();
 
 	//sf::Sprite& getSprite() const;
 	sf::Texture* setTexture(sf::Texture& texture);

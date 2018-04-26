@@ -9,7 +9,7 @@ void HurtComponent::update(double dt) {
   if (auto pl = _player.lock()) {
 	if (length(pl->getPosition() - _parent->getPosition()) < 100.0) {
       pl->get_components<LifeComponent>()[0]->reduceLives();
-	  cout << pl->get_components<LifeComponent>()[0]->getLives() << endl;
+	  
       //_parent->setForDelete();
     }
   }

@@ -1,5 +1,7 @@
 #include "cmp_life.h"
 #include "cmp_blinking.h"
+#include "engine.h"
+#include "cmp_sprite.h"
 #include <iostream>
 
 void LifeComponent::update(double dt)
@@ -10,12 +12,12 @@ void LifeComponent::update(double dt)
 	if (_damaged) {
 		clock.restart();
 		_damaged = false;
+		Engine::getActiveScene()->ents.find("life")[0]->get_components<SpriteComponentRepeted>()[0]->decreaseRep();
 	}
 	if (_state == "invincible")
 	{
 		float dt = clock.restart().asSeconds();
 		static float timer = 0.0f;
-		std::cout << timer << std::endl;
 		timer += dt;
 		
 		if (timer > _invincibleTime){
@@ -38,7 +40,7 @@ void LifeComponent::reduceLives() {
 		_lives --;
 		_state = "invincible";
 		_damaged = true;
-		_parent->addComponent<BlinkComponent>(0.5f);
+		_parent->addComponent<BlinkComponent>(0.3f);
 		std::cout << _lives << std::endl;
 	} 
 	
@@ -49,6 +51,6 @@ void LifeComponent::reduceLives() {
 void LifeComponent::increaseLives() { _lives++; }
 
 LifeComponent::LifeComponent(Entity * p, int lives) 
-	: Component(p), _lives(lives), _state("vulnerable"), _invincibleTime(4.0f)
+	: Component(p), _lives(lives), _state("vulnerable"), _invincibleTime(4.0f), _damaged(false)
 {
 }

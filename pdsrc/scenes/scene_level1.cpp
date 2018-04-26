@@ -168,7 +168,7 @@ void Level1Scene::Load() {
 	    //add enemy texture to "textures"
 	    Animation a;
 	    
-	    auto enemies = ls::findTiles(ls::ENEMY)[0];
+	    auto enemies = ls::findTiles(ls::ENEMY)[2];
 		Vector2f pos = ls::getTilePosition(enemies);
 		shared_ptr<Entity> enemy_temp = makeEntity(true);
 		enemy_temp->setPosition(pos);
@@ -249,42 +249,44 @@ void Level1Scene::Load() {
 	 
 	  auto life = makeEntity(false);
 	  life->entityType = EntityType::LIFE;
+	  life->addTag("life");
 	  life->setPosition(Vector2f(Engine::getWindowSize().x - 200, 80));
 	  auto s = life->addComponent<SpriteComponentRepeted>(player->get_components<LifeComponent>()[0]->getLives());
 	  s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 16, 16)));
 
   }
 
- // //Enemy
- // {
-	//  
-	//  Texture p;
-	//  p.loadFromFile("res/images/TileSet1.png");
-	//  //add enemy texture to "textures"
-	//  
-	//  Animation a;
-	//  
-	//  auto enemies = ls::findTiles(ls::ENEMY);
-	//  for (auto e : enemies) {
-	//	  Vector2f pos = ls::getTilePosition(e);
-	//	  pos += Vector2f(8.0f, 8.0f);
-	//	  shared_ptr<Entity> enemy_temp = makeEntity(true);
-	//	  enemy_temp->setPosition(pos);
-	//	  auto s = enemy_temp->addComponent<SpriteComponentAnimated>();
+  //Enemy
+  {
+	  
+	  Texture p;
+	  p.loadFromFile("res/images/TileSet1.png");
+	  //add enemy texture to "textures"
+	  
+	  Animation a;
+	  
+	  auto enemies = ls::findTiles(ls::ENEMY);
+	  auto e = enemies[0];
+	  //for (auto e : enemies) {
+		  Vector2f pos = ls::getTilePosition(e);
+		  pos += Vector2f(8.0f, 8.0f);
+		  shared_ptr<Entity> enemy_temp = makeEntity(true);
+		  enemy_temp->setPosition(pos);
+		  auto s = enemy_temp->addComponent<SpriteComponentAnimated>();
 
-	//	  s->addFrames(a, 10, 5, 16.0f, 16.0f, 0.0f);
-	//	  AnimatedSprite b(sf::seconds(0.05f), true, true);
-	//	  s->getSprite().setOrigin(8.0f, 8.0f);//needs to set origin because physics create box using center origin
-	//	  a.setSpriteSheet(*(s->addTexture(p)));
-	//	  s->addSprite("idle", b, a);
-	//	  enemy_temp->entityType = EntityType::ENEMY;
-	//	  enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(16.0f, 16.0f));
-	//	  enemy_temp->addComponent<EnemyTurretComponent>();
-	//	  
-	//	  
+		  s->addFrames(a, 10, 5, 16.0f, 16.0f, 0.0f);
+		  AnimatedSprite b(sf::seconds(0.05f), true, true);
+		  s->getSprite().setOrigin(8.0f, 8.0f);//needs to set origin because physics create box using center origin
+		  a.setSpriteSheet(*(s->addTexture(p)));
+		  s->addSprite("idle", b, a);
+		  enemy_temp->entityType = EntityType::ENEMY;
+		  enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(16.0f, 16.0f));
+		  enemy_temp->addComponent<EnemyTurretComponent>();
+		  
+		  
 
-	//  }
- // }
+	 // }
+  }
 
   //Simulate long loading times
   //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
