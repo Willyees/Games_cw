@@ -15,7 +15,7 @@ std::unique_ptr<LevelSystem::TILES[]> LevelSystem::_tiles;
 size_t LevelSystem::_width;
 size_t LevelSystem::_height;
 
-float LevelSystem::_tileSize(100.f);
+float LevelSystem::_tileSize(16.f);
 Vector2f LevelSystem::_offset(0.0f, 0.0f);
 // Vector2f LevelSystem::_offset(0,0);
 
@@ -25,7 +25,9 @@ vector<std::shared_ptr<sf::RectangleShape>> LevelSystem::_sprites;
 void LevelSystem::loadLevelFileJson(const std::string & path)
 {
 	helper->getJson(path);
-	
+	_width = helper->_json.columns_map;
+	_height = helper->_json.rows_map;
+
 	_texture.loadFromFile(helper->_json.texture);
 	vector<TILES> temp_tiles = *(helper->createTileList());
 	
@@ -132,7 +134,68 @@ void LevelSystem::buildSprites() {
 				helper->getIntRect(gid) });
 		}
 	}
-
+	const auto nonempty = tps.size();
+	//const auto nonempty = tps.size();
+	//const auto tls = Vector2f(_tileSize, _tileSize);
+	//  // If tile of the same type are next to each other,
+	//  // We can use one large sprite instead of two.
+	//  if (nonempty) {
+	//
+	//    vector<tp> tpo;
+	//    tp last = tps[0];
+	//    size_t samecount = 0;
+	//
+	//    for (size_t i = 1; i < nonempty; ++i) {
+	//      // Is this tile compressible with the last?
+	//      bool same = ((tps[i].pos.y == last.pos.y) &&
+	//                   (tps[i].pos.x == last.pos.x + (tls.x * (1 + samecount))) &&
+	//                   (tps[i].size == last.size));
+	//      if (same) {
+	//        ++samecount; // Yes, keep going
+	//        // tps[i].c = Color::Green;
+	//      } else {
+	//        if (samecount) {
+	//          last.size.x = (1 + samecount) * tls.x; // Expand tile
+	//        }
+	//        // write tile to list
+	//        tpo.push_back(last);
+	//        samecount = 0;
+	//        last = tps[i];
+	//      }
+	//    }
+	//    // catch the last tile
+	//    if (samecount) {
+	//      last.size.x = (1 + samecount) * tls.x;
+	//      tpo.push_back(last);
+	//    }
+	//
+	//    // No scan down Y, using different algo now that compressible blocks may
+	//    // not be contiguous
+	//    const auto xsave = tpo.size();
+	//    samecount = 0;
+	//    vector<tp> tpox;
+	//    for (size_t i = 0; i < tpo.size(); ++i) {
+	//      last = tpo[i];
+	//      for (size_t j = i + 1; j < tpo.size(); ++j) {
+	//        bool same = ((tpo[j].pos.x == last.pos.x) && (tpo[j].size == last.size) &&
+	//                     (tpo[j].pos.y == last.pos.y + (tls.y * (1 + samecount))) &&
+	//                     (tpo[j].rect == last.rect));
+	//        if (same) {
+	//          ++samecount;
+	//          tpo.erase(tpo.begin() + j);
+	//          --j;
+	//        }
+	//      }
+	//      if (samecount) {
+	//        last.size.y = (1 + samecount) * tls.y; // Expand tile
+	//      }
+	//      // write tile to list
+	//      tpox.push_back(last);
+	//      samecount = 0;
+	//    }
+	//
+	//    tps.swap(tpox);
+	//  }
 	for (auto& t : tps) {
 		auto s = make_unique<sf::RectangleShape>();
 		s->setPosition(t.pos);
@@ -143,105 +206,10 @@ void LevelSystem::buildSprites() {
 		_sprites.push_back(std::move(s));
 	}
 	
-
+	cout << "Level with " << (_width * _height) << " Tiles, With " << nonempty
+	<< " Not Empty, using: " << _sprites.size() << " Sprites\n";
 }
 
-//void LevelSystem::buildSprites(bool optimise) {
-
-//  _sprites.clear();
-//
-//  struct tp {
-//    sf::Vector2f p;
-//    sf::Vector2f s;
-//    sf::Color c;
-//  };
-//  vector<tp> tps;
-//  const auto tls = Vector2f(_tileSize, _tileSize);
-//  for (size_t y = 0; y < _height; ++y) {
-//    for (size_t x = 0; x < _width; ++x) {
-//      Tile t = getTile({x, y});
-//      if (t == EMPTY) {
-//        continue;
-//      }
-//      tps.push_back({getTilePosition({x, y}), tls, getColor(t)});
-//    }
-//  }
-//
-//  const auto nonempty = tps.size();
-//
-//  // If tile of the same type are next to each other,
-//  // We can use one large sprite instead of two.
-//  if (optimise && nonempty) {
-//
-//    vector<tp> tpo;
-//    tp last = tps[0];
-//    size_t samecount = 0;
-//
-//    for (size_t i = 1; i < nonempty; ++i) {
-//      // Is this tile compressible with the last?
-//      bool same = ((tps[i].p.y == last.p.y) &&
-//                   (tps[i].p.x == last.p.x + (tls.x * (1 + samecount))) &&
-//                   (tps[i].c == last.c));
-//      if (same) {
-//        ++samecount; // Yes, keep going
-//        // tps[i].c = Color::Green;
-//      } else {
-//        if (samecount) {
-//          last.s.x = (1 + samecount) * tls.x; // Expand tile
-//        }
-//        // write tile to list
-//        tpo.push_back(last);
-//        samecount = 0;
-//        last = tps[i];
-//      }
-//    }
-//    // catch the last tile
-//    if (samecount) {
-//      last.s.x = (1 + samecount) * tls.x;
-//      tpo.push_back(last);
-//    }
-//
-//    // No scan down Y, using different algo now that compressible blocks may
-//    // not be contiguous
-//    const auto xsave = tpo.size();
-//    samecount = 0;
-//    vector<tp> tpox;
-//    for (size_t i = 0; i < tpo.size(); ++i) {
-//      last = tpo[i];
-//      for (size_t j = i + 1; j < tpo.size(); ++j) {
-//        bool same = ((tpo[j].p.x == last.p.x) && (tpo[j].s == last.s) &&
-//                     (tpo[j].p.y == last.p.y + (tls.y * (1 + samecount))) &&
-//                     (tpo[j].c == last.c));
-//        if (same) {
-//          ++samecount;
-//          tpo.erase(tpo.begin() + j);
-//          --j;
-//        }
-//      }
-//      if (samecount) {
-//        last.s.y = (1 + samecount) * tls.y; // Expand tile
-//      }
-//      // write tile to list
-//      tpox.push_back(last);
-//      samecount = 0;
-//    }
-//
-//    tps.swap(tpox);
-//  }
-//
-//  for (auto& t : tps) {
-//    auto s = make_unique<sf::RectangleShape>();
-//    s->setPosition(t.p);
-//    s->setSize(t.s);
-//    s->setFillColor(Color::Red);
-//    s->setFillColor(t.c);
-//    // s->setFillColor(Color(rand()%255,rand()%255,rand()%255));
-//    _sprites.push_back(move(s));
-//  }
-//
-//  cout << "Level with " << (_width * _height) << " Tiles, With " << nonempty
-//       << " Not Empty, using: " << _sprites.size() << " Sprites\n";
-//}
 
 void LevelSystem::render(RenderWindow& window) {
   for (auto& t : _sprites) {

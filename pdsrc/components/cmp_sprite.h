@@ -61,7 +61,6 @@ public:
 	void render() override;
 	void decreaseRep();
 
-	//sf::Sprite& getSprite() const;
 	sf::Texture* setTexture(sf::Texture& texture);
 	//sf::Sprite& getSprite() const;
 	template <typename... Targs> void setSprite(Targs... params) {

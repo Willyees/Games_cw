@@ -2,6 +2,7 @@
 #include "system_physics.h"
 #include <LevelSystem.h>
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/window/Joystick.hpp>
 
 using namespace std;
 using namespace sf;
@@ -39,9 +40,11 @@ void PlayerPhysicsComponent::update(double dt) {
   }
 
   if (Keyboard::isKeyPressed(Keyboard::Left) ||
-      Keyboard::isKeyPressed(Keyboard::Right)) {
+      Keyboard::isKeyPressed(Keyboard::Right) || 
+	  Joystick::getAxisPosition(0, Joystick::X) < -10.0f || Joystick::getAxisPosition(0, Joystick::X) > 10.0f) {
     // Moving Either Left or Right
-    if (Keyboard::isKeyPressed(Keyboard::Right)) {
+    if (Keyboard::isKeyPressed(Keyboard::Right) || 
+		Joystick::getAxisPosition(0, Joystick::X) > 10.0f) {
 		
       if (getVelocity().x < _maxVelocity.x && (pos.x + dt * _groundspeed) < ls::getWidth())
         impulse({(float)(dt * _groundspeed), 0});
@@ -74,7 +77,7 @@ void PlayerPhysicsComponent::update(double dt) {
   }
   
   // Handle Jump
-  if (Keyboard::isKeyPressed(Keyboard::Up)) {
+  if (Keyboard::isKeyPressed(Keyboard::Up) || Joystick::isButtonPressed(0, 0)) {
     _grounded = isGrounded();
 	if (previous == "right") {
 		_parent->setState("in air right");
@@ -113,7 +116,7 @@ void PlayerPhysicsComponent::update(double dt) {
 
 PlayerPhysicsComponent::PlayerPhysicsComponent(Entity* p,
                                                const Vector2f& size)
-    : PhysicsComponent(p, true, size) {
+    : PhysicsComponent(p, true, size, true) {
   _size = sv2_to_bv2(size, true);
   _maxVelocity = Vector2f(200.f, 400.f);
   _groundspeed = 30.f;

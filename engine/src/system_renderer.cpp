@@ -29,13 +29,18 @@ void Renderer::render() {
   if (rw == nullptr) {
     throw("No render window set! ");
   }
-  
-  rw->setView(rw->getDefaultView());
+  //set view size in case window size has been changed
+  view.setSize(Vector2f(Engine::getWindowSize()));
+
+  Vector2f view_temp_center = view.getCenter();
+  view.setCenter(Vector2f(Engine::getWindowSize().x / 2, Engine::getWindowSize().y / 2));
+  rw->setView(view);
+
   while (!spritesStatic.empty()) {
 	  rw->draw(*spritesStatic.front());
 	  spritesStatic.pop();
   }
-  
+  view.setCenter(view_temp_center);
   //many cases, could be improved. TODO: add cases x and y are > mapWidth
   float x = view.getCenter().x;
   float y = view.getCenter().y;
@@ -56,7 +61,7 @@ void Renderer::render() {
     rw->draw(*sprites.front());
     sprites.pop();
   }
-
+  view_temp_center = Vector2f(0.0f, 0.0f);
   
 }
 

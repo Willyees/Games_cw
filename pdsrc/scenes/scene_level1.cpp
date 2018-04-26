@@ -118,10 +118,11 @@ void Level1Scene::Load() {
 	as_air_right.setOrigin(90.0f, 67.7f);
 	cmp->addSprite("in air right", as_air_right,a_air_right);
 
-	player->addComponent<PlayerPhysicsComponent>(Vector2f(60.0f, 90.0f));
+	auto phy = player->addComponent<PlayerPhysicsComponent>(Vector2f(60.0f, 90.0f));
+	phy->setRestitution(0.0f);
 	player->addComponent<LifeComponent>(3);
 	//set view to center on player
-	Renderer::view.reset(sf::FloatRect(player->getPosition().x, player->getPosition().y, 1280.0f, 800.f));
+	Renderer::view.reset(sf::FloatRect(player->getPosition().x, player->getPosition().y, Engine::getWindowSize().x, Engine::getWindowSize().y));
 	
 	}
   //score
@@ -158,7 +159,8 @@ void Level1Scene::Load() {
 		  s->addSprite("idle", b, a);
 		  
 		  coin_temp->entityType = EntityType::COIN;
-		  coin_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f,40.0f));
+		  auto phy = coin_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f,40.0f));
+		  phy->setRestitution(0.0f);
 	  }
   }
   //add saw enemy
@@ -239,7 +241,8 @@ void Level1Scene::Load() {
       auto e = makeEntity(true);
 	  e->entityType = EntityType::WALL;
       e->setPosition(pos);
-      e->addComponent<PhysicsComponent>(false, Vector2f(16.f, 16.f));
+      auto phy = e->addComponent<PhysicsComponent>(false, Vector2f(16.f, 16.f));
+	  phy->setRestitution(0.0f);
     }
   }
   //Add life
@@ -310,11 +313,21 @@ void Level1Scene::Update(const double& dt) {
 	 
     //
   }
-  if (Keyboard::isKeyPressed(Keyboard::Num3)) {
+  if (Joystick::isButtonPressed(0, 1)) {
 	 // player->get_components<LifeComponent>()[0]->increaseLives();
 	 Engine::ChangeScene((Scene*)&gameOver);
 	 return;
   }
+  float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
+  float y = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
+  static float timer = 0;
+  timer += dt;
+  if(timer > 5.0f) {
+	cout << x << endl;
+	cout << y << endl;
+	timer = 0.0f;
+  }
+
   /*if (coin->get_components<PhysicsComponent>()[0]->isTouching(*player->get_components<PlayerPhysicsComponent>()[0])) {
 	  cout << "yes they are !" << endl;
   }*/
@@ -324,7 +337,7 @@ void Level1Scene::Update(const double& dt) {
 	  Engine::ChangeScene((Scene*)&gameOver);
 	  return;
   }
-  //score->get_components<TextComponent>()[0]->SetText("Score " + std::to_string(scorePoints));
+  score->get_components<TextComponent>()[0]->SetText("Score " + std::to_string(scorePoints));
   
   Renderer::view.setCenter(player->getPosition().x, player->getPosition().y);
   
@@ -350,6 +363,7 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 		{
 		case EntityType::PLAYER:
 			entityA->setForDelete();
+			Engine::getActiveScene()->addScore(10);
 		default:
 			break;
 		}
@@ -359,6 +373,9 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 		{
 		case EntityType::PLAYER:
 			entityB->get_components<LifeComponent>().front()->reduceLives();
+			entityA->setForDelete();
+			break;
+		case EntityType::WALL:
 			entityA->setForDelete();
 			break;
 		default:
@@ -389,6 +406,9 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 		{
 		case EntityType::PLAYER:
 			entityA->get_components<LifeComponent>().front()->reduceLives();
+			entityB->setForDelete();
+			break;
+		case EntityType::WALL:
 			entityB->setForDelete();
 			break;
 		default:

@@ -44,7 +44,7 @@ void EnemyTurretComponent::fire() const {
 	s->getShape().setFillColor(Color::Red);
 	*/
 	auto p = bullet->addComponent<PhysicsComponent>(true, Vector2f(50.f, 44.75f));
-	p->setRestitution(.4f);
+	p->setRestitution(.1f);
 	p->setFriction(.005f);
 	if (auto pl = _player.lock()) {
 		//p->impulse(Vector2f(-50.0f, 25.0f));

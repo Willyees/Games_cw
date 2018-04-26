@@ -5,7 +5,7 @@
 
 class MenuScene : public Scene {
 private:
-	sf::Vector2f posMenuItems[3];
+	std::vector<sf::Vector2f> posMenuItems;
 public:
 	sf::Music theme;
 

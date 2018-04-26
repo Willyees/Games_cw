@@ -11,40 +11,107 @@ void PhysicsComponent::update(double dt) {
   _parent->setRotation((180 / b2_pi) * _body->GetAngle());
   
 }
+//used from player
+PhysicsComponent::PhysicsComponent(Entity* p, bool dyn, const Vector2f& size, bool player) 
+	: Component(p), _dynamic(dyn) {
+	
+	b2BodyDef BodyDef;
+	// Is Dynamic(moving), or static(Stationary)
+	BodyDef.type = _dynamic ? b2_dynamicBody : b2_staticBody;
+	BodyDef.position = sv2_to_bv2(invert_height(p->getPosition()));
+
+	// Create the body
+	_body = Physics::GetWorld()->CreateBody(&BodyDef);
+	_body->SetActive(true);
+	//{
+	//	// Create the fixture shape
+	//	b2PolygonShape Shape;
+	//	// SetAsBox box takes HALF-Widths!
+	//	Shape.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
+	//	b2FixtureDef FixtureDef;
+	//	// Fixture properties
+	//	// FixtureDef.density = _dynamic ? 10.f : 0.f;
+	//	FixtureDef.friction = _dynamic ? 0.1f : 0.8f;
+	//	FixtureDef.restitution = .2;
+	//	FixtureDef.shape = &Shape;
+	//	// Add to body
+	//	_fixture = _body->CreateFixture(&FixtureDef);
+	//	//_fixture->SetRestitution(.9)
+	//	FixtureDef.restitution = .2;
+	//}
+	 
+
+	
+	//Entity* ent = static_cast<Entity*>(_body->GetUserData());
+	BodyDef.bullet = true;
+	b2PolygonShape shape1;
+	shape1.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
+	b2FixtureDef FixtureDef;
+	// Fixture properties
+	// FixtureDef.density = _dynamic ? 10.f : 0.f;
+	FixtureDef.friction = _dynamic ? 0.1f : 0.8f;
+	FixtureDef.restitution = .2;
+	FixtureDef.shape = &shape1;
+	// Add to body
+	_fixture = _body->CreateFixture(&FixtureDef);
+	//_fixture->SetRestitution(.9)
+	FixtureDef.restitution = .2;
+	
+	{
+		b2PolygonShape poly;
+		poly.SetAsBox(0.45f, 1.4f);
+		b2FixtureDef FixtureDefPoly;
+
+		FixtureDefPoly.shape = &poly;
+		
+		_body->CreateFixture(&FixtureDefPoly);
+
+	}
+	{
+		b2CircleShape circle;
+		circle.m_radius = 0.2f;
+		circle.m_p.Set(0, -1.4f);
+		b2FixtureDef FixtureDefCircle;
+		FixtureDefCircle.shape = &circle;
+		_body->CreateFixture(&FixtureDefCircle);
+	}
+	_body->SetUserData(p);
+}
+
 
 PhysicsComponent::PhysicsComponent(Entity* p, bool dyn,
                                    const Vector2f& size)
     : Component(p), _dynamic(dyn) {
 
-  b2BodyDef BodyDef;
-  // Is Dynamic(moving), or static(Stationary)
-  BodyDef.type = _dynamic ? b2_dynamicBody : b2_staticBody;
-  BodyDef.position = sv2_to_bv2(invert_height(p->getPosition()));
+	b2BodyDef BodyDef;
+	// Is Dynamic(moving), or static(Stationary)
+	BodyDef.type = _dynamic ? b2_dynamicBody : b2_staticBody;
+	BodyDef.position = sv2_to_bv2(invert_height(p->getPosition()));
 
-  // Create the body
-  _body = Physics::GetWorld()->CreateBody(&BodyDef);
-  _body->SetActive(true);
-  {
-    // Create the fixture shape
-    b2PolygonShape Shape;
-    // SetAsBox box takes HALF-Widths!
-    Shape.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
-	b2FixtureDef FixtureDef;
-    // Fixture properties
-    // FixtureDef.density = _dynamic ? 10.f : 0.f;
-    FixtureDef.friction = _dynamic ? 0.1f : 0.8f;
-    FixtureDef.restitution = .2;
-    FixtureDef.shape = &Shape;
-    // Add to body
-    _fixture = _body->CreateFixture(&FixtureDef);
-    //_fixture->SetRestitution(.9)
-    FixtureDef.restitution = .2;
-  }
-  //**TESTING 
+	// Create the body
+	_body = Physics::GetWorld()->CreateBody(&BodyDef);
+	_body->SetActive(true);
+	{
+		// Create the fixture shape
+		b2PolygonShape Shape;
+		// SetAsBox box takes HALF-Widths!
+		Shape.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
+		b2FixtureDef FixtureDef;
+		// Fixture properties
+		// FixtureDef.density = _dynamic ? 10.f : 0.f;
+		FixtureDef.friction = _dynamic ? 0.1f : 0.8f;
+		FixtureDef.restitution = .2;
+		FixtureDef.shape = &Shape;
+		// Add to body
+		_fixture = _body->CreateFixture(&FixtureDef);
+		//_fixture->SetRestitution(.9)
+		FixtureDef.restitution = .2;
+	}
+	//**TESTING 
+
+	_body->SetUserData(p);
+	Entity* ent = static_cast<Entity*>(_body->GetUserData());
   
-  _body->SetUserData(p);
-  Entity* ent = static_cast<Entity*>(_body->GetUserData());
-  //*
 
   // An ideal Pod/capusle shape should be used for hte player,
   // this isn't built into B2d, but we can combine two shapes to do so.

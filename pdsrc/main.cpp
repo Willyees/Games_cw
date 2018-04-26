@@ -12,6 +12,6 @@ GameOverScene gameOver;
 //Level3Scene level3;
 
 int main() {
-  Engine::Start(1280, 800, "Potato's Destiny",&level1);
+  Engine::Start(1280, 800, "Potato's Destiny",&menu);
 
 }

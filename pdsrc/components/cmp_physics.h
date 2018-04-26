@@ -12,6 +12,7 @@ protected:
 
 public:
   PhysicsComponent(Entity* p, bool dyn, const sf::Vector2f& size);
+  PhysicsComponent(Entity* p, bool dyn, const sf::Vector2f& size, bool player);//creates player with 2 boxes
 
   b2Fixture* const getFixture() const;
   bool isTouching(const PhysicsComponent& pc) const;
