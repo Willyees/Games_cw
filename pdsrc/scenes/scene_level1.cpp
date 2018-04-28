@@ -14,6 +14,7 @@
 #include <SFML\Audio\Music.hpp>
 #include "system_renderer.h"
 #include "system_physics.h"
+using namespace rapidjson;
 
 using namespace std;
 using namespace sf;
@@ -132,6 +133,9 @@ void Level1Scene::Load() {
 	  score->addComponent<TextComponent>("Score: " + scorePoints);
 	  score->setPosition(Vector2f(Engine::getWindowSize().x - 200.0f, 20.0f));
   }
+  {
+
+  }
 
   // Add coins
   {
@@ -190,6 +194,7 @@ void Level1Scene::Load() {
 
 		  oil_temp->entityType = EntityType::OIL;
 		  auto phy = oil_temp->addComponent<PhysicsComponent>(false, Vector2f(50.0f, 50.0f));
+		  oil_temp->addComponent<HurtComponent>();
 		  phy->setRestitution(0.0f);
 	  }
   }
@@ -216,6 +221,7 @@ void Level1Scene::Load() {
 
 		  f_temp->entityType = EntityType::POWERUP;
 		  auto phy = f_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f, 40.0f));
+		  
 		  phy->setRestitution(0.0f);
 	  }
   }
