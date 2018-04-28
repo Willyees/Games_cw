@@ -15,7 +15,7 @@ std::unique_ptr<LevelSystem::TILES[]> LevelSystem::_tiles;
 size_t LevelSystem::_width;
 size_t LevelSystem::_height;
 
-float LevelSystem::_tileSize(16.f);
+float LevelSystem::_tileSize(50.f);
 Vector2f LevelSystem::_offset(0.0f, 0.0f);
 // Vector2f LevelSystem::_offset(0,0);
 

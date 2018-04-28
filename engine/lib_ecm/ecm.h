@@ -47,7 +47,8 @@ enum EntityType
 	KEY,
 	SCORE,
 	LIFE,
-	ENEMY
+	ENEMY,
+	POWERUP
 };
 class Entity {
   friend struct EntityManager;

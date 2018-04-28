@@ -33,7 +33,7 @@ void Level1Scene::Load() {
 	this->theme.play();
 
   cout << " Scene 1 Load" << endl;
-  ls::loadLevelFileJson("res/levels/untitled100.json");
+  ls::loadLevelFileJson("res/levels/Map.json");
 
   auto ho = Engine::getWindowSize().y - (ls::getHeight() * 40.f);
   ls::setOffset(Vector2f(0, 0));//TODO:check how to use offset (before was set to ho)
@@ -163,27 +163,56 @@ void Level1Scene::Load() {
 		  phy->setRestitution(0.0f);
 	  }
   }
-  //add saw enemy
+  // Add Fertilizer
+  {
+	  Texture p;
+	  p.loadFromFile("res/images/fertalizer.png");
+
+	  Animation a;
+
+	  auto fertalizer = ls::findTiles(ls::FERTALIZER);
+
+
+	  for (auto f : fertalizer) {
+
+		  Vector2f pos = ls::getTilePosition(f);
+		  //pos -= Vector2f(20.0f, 20.0f);
+		  shared_ptr<Entity> f_temp = makeEntity(true);
+		  f_temp->setPosition(pos);
+		  auto s = f_temp->addComponent<SpriteComponent>();
+		  s->setSprite(Sprite(*(s->setTexture(p)),IntRect(0,0,150,150)));//adding texture internally and giving it to the animation as well
+		  AnimatedSprite b(sf::seconds(0.1f), true, true);
+
+
+		  f_temp->entityType = EntityType::POWERUP;
+		  auto phy = f_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f, 40.0f));
+		  phy->setRestitution(0.0f);
+	  }
+  }
+  //add blade obstacle
   {
 	  Texture p;
 	    p.loadFromFile("res/images/blade.png");
 	    //add enemy texture to "textures"
 	    Animation a;
 	    
-	    auto enemies = ls::findTiles(ls::ENEMY)[2];
-		Vector2f pos = ls::getTilePosition(enemies);
-		shared_ptr<Entity> enemy_temp = makeEntity(true);
-		enemy_temp->setPosition(pos);
-		auto s = enemy_temp->addComponent<SpriteComponentAnimated>();
-		s->addFrames(a, 5, 2, 300.0f, 306.0f, 0.0f);
-		AnimatedSprite b(sf::seconds(0.05f), true, true);
-		b.setOrigin(150.0f, 153.0f);//needs to set origin because physics create box using center origin
-		a.setSpriteSheet(*(s->addTexture(p)));
-		s->addSprite("idle", b, a);
-		enemy_temp->entityType = EntityType::ENEMY;
-		enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
-		enemy_temp->addComponent<HurtComponent>();
-		//enemy_temp->addComponent<EnemyTurretComponent>();
+	    auto blade = ls::findTiles(ls::BLADE);
+		for (auto b : blade) {
+			Vector2f pos = ls::getTilePosition(b);
+			shared_ptr<Entity> enemy_temp = makeEntity(true);
+			enemy_temp->setPosition(pos);
+			auto s = enemy_temp->addComponent<SpriteComponentAnimated>();
+			s->addFrames(a, 5, 2, 300.0f, 306.0f, 0.0f);
+			AnimatedSprite b(sf::seconds(0.05f), true, true);
+			b.setOrigin(150.0f, 153.0f);//needs to set origin because physics create box using center origin
+			a.setSpriteSheet(*(s->addTexture(p)));
+			s->addSprite("idle", b, a);
+			enemy_temp->entityType = EntityType::ENEMY;
+			enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
+			enemy_temp->addComponent<HurtComponent>();
+			//enemy_temp->addComponent<EnemyTurretComponent>();
+		}
+		
 	    
 	  	  
   }
@@ -195,43 +224,47 @@ void Level1Scene::Load() {
 		
 	    Animation a;
 	    
-	    auto enemies = ls::findTiles(ls::ENEMY)[1];
-		Vector2f pos = ls::getTilePosition(enemies);
-		masher = makeEntity(true);
-		masher->setPosition(pos);
-		auto s = masher->addComponent<SpriteComponentAnimated>();
-		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 64.0f));
-		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 86.0f));
-		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 132.0f));
-		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 171.0f));
-		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 203.0f));
-		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 244.0f));
-		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 263.0f));
-		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 263.0f));
-		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 284.0f));
-		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 336.0f));
-		a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 372.0f));
-		/*s->addFrames(a, 11, 5, 179.0f, 435.0f, 0.0f);*/
-		AnimatedSprite b(sf::seconds(0.1f), true, true);
-		//b.setOrigin(89.5f, 217.5f);//needs to set origin because physics create box using center origin
-		a.setSpriteSheet(*(s->addTexture(chain)));
-		s->addSprite("idle", b, a);
-		masher->entityType = EntityType::ENEMY;
-		//enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
+	    auto masher = ls::findTiles(ls::MASHER);
+		for (auto m : masher) {
+			Vector2f pos = ls::getTilePosition(m);
+			auto m = makeEntity(true);
+			m->setPosition(pos);
+			auto s = m->addComponent<SpriteComponentAnimated>();
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 64.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 86.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 132.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 171.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 203.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 244.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 263.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 263.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 284.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 336.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 372.0f));
+			/*s->addFrames(a, 11, 5, 179.0f, 435.0f, 0.0f);*/
+			AnimatedSprite b(sf::seconds(0.1f), true, true);
+			//b.setOrigin(89.5f, 217.5f);//needs to set origin because physics create box using center origin
+			a.setSpriteSheet(*(s->addTexture(chain)));
+			s->addSprite("idle", b, a);
+			m->entityType = EntityType::ENEMY;
+			//enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
+
+			//masherbottom
+			Texture p;
+			p.loadFromFile("res/images/masher_bottom.png");
+
+			shared_ptr<Entity> masher_bottom = makeEntity(true);
+			shared_ptr<SpriteComponent> s1 = masher_bottom->addComponent<SpriteComponent>();
+			s1->setSprite(Sprite(*(s1->setTexture(p)), IntRect(0, 0, 126, 66)));
+			s1->getSprite().setOrigin(Vector2f(63.0f, 0.0f));
+			masher_bottom->addComponent<FollowPosComponent>(&(*m));
+			masher_bottom->addComponent<HurtComponent>();
+		}
+		
 
   }
-  //masherbottom
-  {
-	Texture p;
-	p.loadFromFile("res/images/masher_bottom.png");
-	  
-	shared_ptr<Entity> masher_bottom = makeEntity(true);
-	shared_ptr<SpriteComponent> s = masher_bottom->addComponent<SpriteComponent>();
-	s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 126, 66)));
-	s->getSprite().setOrigin(Vector2f(63.0f, 0.0f));
-	masher_bottom->addComponent<FollowPosComponent>(&(*masher));
-	masher_bottom->addComponent<HurtComponent>();
-  }
+  
+  
   // Add physics colliders to level tiles.
   {
     auto walls = ls::findTiles(ls::WALL);
@@ -269,8 +302,7 @@ void Level1Scene::Load() {
 	  Animation a;
 	  
 	  auto enemies = ls::findTiles(ls::ENEMY);
-	  auto e = enemies[0];
-	  //for (auto e : enemies) {
+	  for (auto e : enemies) {
 		  Vector2f pos = ls::getTilePosition(e);
 		  pos += Vector2f(8.0f, 8.0f);
 		  shared_ptr<Entity> enemy_temp = makeEntity(true);
@@ -285,10 +317,8 @@ void Level1Scene::Load() {
 		  enemy_temp->entityType = EntityType::ENEMY;
 		  enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(16.0f, 16.0f));
 		  enemy_temp->addComponent<EnemyTurretComponent>();
+	  }
 		  
-		  
-
-	 // }
   }
 
   //Simulate long loading times
@@ -309,7 +339,7 @@ void Level1Scene::UnLoad() {
 
 void Level1Scene::Update(const double& dt) {
 	
-  if (ls::getTileAt(player->getPosition()) == ls::END) {
+  if (ls::getTileAt(player->getPosition()) == ls::PORTAL) {
 	 
     //
   }

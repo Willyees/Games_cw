@@ -42,7 +42,11 @@ public:
     WALL,
 	COIN,
     ENEMY,
-	END,
+	BLADE,
+	MASHER,
+	FERTALIZER,
+	OIL,
+	PORTAL,
 	UNKNOWN
   };
 
@@ -108,12 +112,20 @@ public:
 	const std::vector<limitElementTexture> limitsElementsTexture = 
 	{
 	{limitElementTexture(0,0, ls::EMPTY) },
-	{limitElementTexture(46,46, ls::START)},
-	{limitElementTexture(49,49, ls::KEY)},
-	{limitElementTexture(1,45, ls::WALL)},
-	{limitElementTexture(50,50, ls::COIN)},
-	{limitElementTexture(48,48, ls::UNKNOWN)},
-	{limitElementTexture(47,47, ls::ENEMY)}
+	{ limitElementTexture(1,6, ls::WALL) },
+	{limitElementTexture(7,7, ls::START)},
+	{ limitElementTexture(8,8, ls::ENEMY)},
+	{ limitElementTexture(9,9, ls::COIN) },
+	{limitElementTexture(10,10, ls::BLADE)},
+	{ limitElementTexture(11,11, ls::MASHER) },
+	{ limitElementTexture(12,12, ls::FERTALIZER) },
+	{limitElementTexture(13,13, ls::KEY)},
+	{ limitElementTexture(14,14, ls::PORTAL) },
+	{ limitElementTexture(15,15, ls::OIL) },
+
+	
+	//{limitElementTexture(48,48, ls::UNKNOWN)},
+	
 	};
 	
 	sf::IntRect getIntRect(size_t gid);
