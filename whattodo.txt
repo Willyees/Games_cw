@@ -4,12 +4,12 @@ Games Eng CW what to do:
 -add points top left screen -DONE
 -add lives on screen -DONE
 -add bullet from enemy(modify enemy_ai_cmp)-DONE
+-create map lv1 using tiled -DONE
+-coins are physic structures, when player hit them for a moment will bounce back. Should not do that. -DONE
 
 -Find sound effects and add them. They should be free and from usable source: they should have a licence to be used freely.(they are listed in the gdd)
--create map lv1 using tiled
 -add key and check for contact player and key
--coins are physic structures, when player hit them for a moment will bounce back. Should not do that.
--add enemies texture (chef missing)
+-add textures (chef missing and key)
 -remappable controls
 -Graphics options (Resolution & window mode)
 -Single file .exe game installer/uninstaller

@@ -7,6 +7,7 @@
 #include "../components/cmp_follow_pos.h"
 #include "../components/cmp_hurt_player.h"
 #include "../components/cmp_powerup.h"
+#include "../components/cmp_get_hurt_by_player.h"
 #include "../game.h"
 #include <LevelSystem.h>
 #include <iostream>
@@ -26,9 +27,11 @@ static shared_ptr<Entity> score;
 static shared_ptr<Texture> background_text;
 static shared_ptr<Entity> masher;
 
+void Level1Scene::UnlockNextScene() { _nextSceneUnlocked = true; }
+
 void Level1Scene::Load() {
 	menu.theme.stop();
-	if (!this->theme.openFromFile("res/musics/mainTheme.ogg"))
+	if (!this->theme.openFromFile("res/musics/Vidian_-_aether_theories_1.ogg"))
 		cout << "Error: we not found music file";
 	this->theme.setLoop(true);
 	this->theme.setVolume(75);
@@ -164,8 +167,9 @@ void Level1Scene::Load() {
 		  s->addSprite("idle", b, a);
 		  
 		  coin_temp->entityType = EntityType::COIN;
-		  auto phy = coin_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f,40.0f));
-		  phy->setRestitution(0.0f);
+		  coin_temp->addComponent<GetHurtByPlayerComponent>();
+		  //auto phy = coin_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f,40.0f));
+		  //phy->setRestitution(0.0f);
 	  }
   }
   //Add Oil
@@ -358,6 +362,25 @@ void Level1Scene::Load() {
 	  }
 		  
   }
+  //TODO: find key sprite and fix all the sizes.
+  //Key
+  {
+	  Texture p;
+	  p.loadFromFile("res/images/key.png");
+	  auto keys = ls::findTiles(ls::KEY);
+	  for (auto k : keys) {
+		  Vector2f pos = ls::getTilePosition(k);
+		  pos += Vector2f(8.0f, 8.0f);
+		  shared_ptr<Entity> k = makeEntity(true);
+		  k->setPosition(pos);
+		  auto s = k->addComponent<SpriteComponent>();
+		  s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 50, 50)));
+		  s->getSprite().setOrigin(Vector2f(25.0f, 25.0f));
+		  k->addComponent<GetHurtByPlayerComponent>();
+		  //add component which will set scene _nextSceneUnlocked to true when destroyed or touched
+	  }
+
+  }
 
   //Simulate long loading times
   //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
@@ -377,13 +400,15 @@ void Level1Scene::UnLoad() {
 
 void Level1Scene::Update(const double& dt) {
 	
-  if (ls::getTileAt(player->getPosition()) == ls::PORTAL) {
+  if (ls::getTileAt(player->getPosition()) == ls::PORTAL && _nextSceneUnlocked == true) {
 	 
     //
   }
-  if (Joystick::isButtonPressed(0, 1)) {
-	 // player->get_components<LifeComponent>()[0]->increaseLives();
-	 Engine::ChangeScene((Scene*)&gameOver);
+
+  if (Keyboard::isKeyPressed(Keyboard::Num3)) {//almost make it invicible
+	  player->get_components<LifeComponent>()[0]->increaseLives();
+	  
+	 
 	 return;
   }
   float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);

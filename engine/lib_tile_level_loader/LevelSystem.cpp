@@ -225,9 +225,9 @@ LevelSystem::TILES LevelSystem::getTile(sf::Vector2ul p) {//base 0. first row, c
   return _tiles[(p.y * helper->_json.columns_map) + p.x];
 }
 
-size_t LevelSystem::getWidth() { return helper->_json.columns_map * helper->_json.tileWidth_map; }
+float LevelSystem::getWidth() { return helper->_json.columns_map * helper->_json.tileWidth_map; }
 
-size_t LevelSystem::getHeight() { return helper->_json.rows_map * helper->_json.tileHeight_map; }
+float LevelSystem::getHeight() { return helper->_json.rows_map * helper->_json.tileHeight_map; }
 
 sf::Vector2f LevelSystem::getTilePosition(sf::Vector2ul p) {
   return (Vector2f(p.x * helper->_json.tileWidth_map, p.y * helper->_json.tileHeight_map)) + _offset;
