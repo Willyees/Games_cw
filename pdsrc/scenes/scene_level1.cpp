@@ -47,7 +47,7 @@ void Level1Scene::Load() {
 	  
 	  /*auto s = test->addComponent<SpriteComponent>();
 	  s->setSprite(Sprite(*(s->setTexture(p))));*/
-	  s.setPosition(Vector2f(0,200));
+	  s.setPosition(Vector2f(0,0));
 	  setBackground(s);
 		//s->getShape().setOrigin(Vector2f(200.0f, 200.0f));
 	  
@@ -71,7 +71,7 @@ void Level1Scene::Load() {
 	  a_right.setSpriteSheet(*(cmp->addTexture(p)));
 	  //cmp->addFrames(a1, 41, 5, 640.0f, 480.0f, 0.0f);
 	  cmp->addFrames(a_right, 41, 5, 180.0f, 135.4f, 0.0f);
-	  AnimatedSprite as_right(sf::seconds(0.05f), true, true);
+	  AnimatedSprite as_right(sf::seconds(0.02f), true, true);
 	  as_right.setOrigin(90.0f, 67.7f);
 	  cmp->addSprite("right", as_right, a_right);
 	  
@@ -80,7 +80,7 @@ void Level1Scene::Load() {
 	  
 
 	  Animation a_idle;
-	  AnimatedSprite as_idle(sf::seconds(0.05f), true, true);//seconds, paused, looped
+	  AnimatedSprite as_idle(sf::seconds(0.02f), true, true);//seconds, paused, looped
 	  a_idle.setSpriteSheet(*(cmp->addTexture(p)));
 	  cmp->addFrames(a_idle, 1, 5, 180.0f, 135.4f, 0.0f);
 	  as_idle.setOrigin(90.0f, 67.7f);
@@ -89,7 +89,7 @@ void Level1Scene::Load() {
 
   
 	Animation a_left;
-	AnimatedSprite as_left(sf::seconds(0.05f), true, true);
+	AnimatedSprite as_left(sf::seconds(0.02f), true, true);
 	Texture p1;
 	p1.loadFromFile("res/images/player_sprites/walk_left_1.png");
 	a_left.setSpriteSheet(*(cmp->addTexture(p1)));
@@ -183,7 +183,7 @@ void Level1Scene::Load() {
 		  auto s = oil_temp->addComponent<SpriteComponentAnimated>();
 		  a.setSpriteSheet(*(s->addTexture(p)));//adding texture internally and giving it to the animation as well
 		  s->addFrames(a, 3, 2, 50.0f, 50.0f, 0.0f);
-		  AnimatedSprite b(sf::seconds(0.1f), true, true);
+		  AnimatedSprite b(sf::seconds(0.05f), true, true);
 
 		  b.setOrigin(25.0f, 25.0f);//needs to set origin because physics create box using center origin
 		  s->addSprite("idle", b, a);
@@ -238,7 +238,7 @@ void Level1Scene::Load() {
 			a.setSpriteSheet(*(s->addTexture(p)));
 			s->addSprite("idle", b, a);
 			enemy_temp->entityType = EntityType::ENEMY;
-			enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
+			enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(150.0f, 153.0f));
 			enemy_temp->addComponent<HurtComponent>();
 			//enemy_temp->addComponent<EnemyTurretComponent>();
 		}
