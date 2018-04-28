@@ -48,6 +48,7 @@ void PlayerPhysicsComponent::update(double dt) {
 		
       if (getVelocity().x < _maxVelocity.x && (pos.x + dt * _groundspeed) < ls::getWidth())
         impulse({(float)(dt * _groundspeed), 0});
+
 		  if (!isGrounded())
 			  if (previous == "in air right" || previous == "in air left")
 				  _parent->setState(previous);
@@ -90,7 +91,8 @@ void PlayerPhysicsComponent::update(double dt) {
     if (_grounded) {
       setVelocity(Vector2f(getVelocity().x, 0.f));
       teleport(Vector2f(pos.x, pos.y - 2.0f));
-      impulse(Vector2f(0, -9.f));
+      impulse(Vector2f(0, _impstreght));
+	  /*impstreght(Vector2f(0, -11.f));*/
     }
   }
 
@@ -114,9 +116,11 @@ void PlayerPhysicsComponent::update(double dt) {
   PhysicsComponent::update(dt);
 }
 
+
 PlayerPhysicsComponent::PlayerPhysicsComponent(Entity* p,
                                                const Vector2f& size)
     : PhysicsComponent(p, true, size, true) {
+  _impstreght = -10.f;
   _size = sv2_to_bv2(size, true);
   _maxVelocity = Vector2f(200.f, 400.f);
   _groundspeed = 30.f;
@@ -125,4 +129,9 @@ PlayerPhysicsComponent::PlayerPhysicsComponent(Entity* p,
   _body->SetFixedRotation(true);
   //Bullet items have higher-res collision detection
   _body->SetBullet(true);
+}
+
+void PlayerPhysicsComponent::setImpStrenght(float impstreght)
+{
+	_impstreght = impstreght;
 }

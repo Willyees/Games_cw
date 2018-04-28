@@ -6,6 +6,7 @@
 #include "../components/cmp_enemy_turret.h"
 #include "../components/cmp_follow_pos.h"
 #include "../components/cmp_hurt_player.h"
+#include "../components/cmp_powerup.h"
 #include "../game.h"
 #include <LevelSystem.h>
 #include <iostream>
@@ -215,14 +216,15 @@ void Level1Scene::Load() {
 		  shared_ptr<Entity> f_temp = makeEntity(true);
 		  f_temp->setPosition(pos);
 		  auto s = f_temp->addComponent<SpriteComponent>();
+		  f_temp->addComponent<PowerUpComponent>();
 		  s->setSprite(Sprite(*(s->setTexture(p)),IntRect(0,0,50,50)));//adding texture internally and giving it to the animation as well
 		  AnimatedSprite b(sf::seconds(0.1f), true, true);
 
 
 		  f_temp->entityType = EntityType::POWERUP;
-		  auto phy = f_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f, 40.0f));
+		  //auto phy = f_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f, 40.0f));
 		  
-		  phy->setRestitution(0.0f);
+		  //phy->setRestitution(0.0f);
 	  }
   }
   //add blade obstacle
