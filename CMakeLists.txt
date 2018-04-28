@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.9)
 # Compiler flags
 if (MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /EHsc" CACHE INTERNAL "" FORCE)
@@ -79,16 +79,16 @@ target_link_libraries(pd lib_engine)
 set(EXECUTABLES ${EXECUTABLES} pd)
 
 #### Target for copying resources to build dir####
-##if(UNIX)
-##message("Copying resources...")
-##   add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND} -E copy_directory
-#          "${PROJECT_SOURCE_DIR}/res" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res
-#          )
-##else()
-##  add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND} -E copy_directory
-#          "${PROJECT_SOURCE_DIR}/res" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/res
-#          )
-## endif() 
+if(UNIX)
+message("Copying resources...")
+   add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${PROJECT_SOURCE_DIR}/res" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res
+          )
+else()
+  add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${PROJECT_SOURCE_DIR}/res" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/res
+          )
+endif()
 
 ##Target to copy DLLs
 add_custom_target(copy_dlls ALL        # Adds a post-build event to MyTest
