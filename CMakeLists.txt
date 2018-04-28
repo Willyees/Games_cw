@@ -115,5 +115,5 @@ foreach (exe ${EXECUTABLES})
 
   #target_link_libraries(${exe} "${CMAKE_SOURCE_DIR}/lib/sfml/extlibs/libs-osx/Frameworks/f‌​reetype.framework/Ve‌​rsions/A/freetype")
 
-  add_dependencies(${exe} sfml-graphics sfml-audio copy_resources)
+  add_dependencies(${exe} sfml-graphics sfml-audio) #copy_resources)
 endforeach ()
