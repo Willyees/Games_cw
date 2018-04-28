@@ -147,7 +147,7 @@ void Level1Scene::Load() {
 	  for (auto c : coins){
 		  
 		  Vector2f pos = ls::getTilePosition(c);
-		  //pos -= Vector2f(20.0f, 20.0f);
+		  pos += Vector2f(25.0f, 25.0f);
 		  shared_ptr<Entity> coin_temp = makeEntity(true);
 		  coin_temp->setPosition(pos);
 		  auto s = coin_temp->addComponent<SpriteComponentAnimated>();
@@ -160,6 +160,36 @@ void Level1Scene::Load() {
 		  
 		  coin_temp->entityType = EntityType::COIN;
 		  auto phy = coin_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f,40.0f));
+		  phy->setRestitution(0.0f);
+	  }
+  }
+  //Add Oil
+  {
+	  Texture p;
+	  p.loadFromFile("res/images/oil.png");
+
+	  Animation a;
+
+	  auto oil = ls::findTiles(ls::OIL);
+
+	  //setting coins using top left position (of levelsysytem coin TILE) as center for the coin sprite.
+	  //using different physics component size because has pixel that are not coin only
+	  for (auto o : oil) {
+
+		  Vector2f pos = ls::getTilePosition(o);
+		  pos += Vector2f(25.0f, 25.0f);
+		  shared_ptr<Entity> oil_temp = makeEntity(true);
+		  oil_temp->setPosition(pos);
+		  auto s = oil_temp->addComponent<SpriteComponentAnimated>();
+		  a.setSpriteSheet(*(s->addTexture(p)));//adding texture internally and giving it to the animation as well
+		  s->addFrames(a, 3, 2, 50.0f, 50.0f, 0.0f);
+		  AnimatedSprite b(sf::seconds(0.1f), true, true);
+
+		  b.setOrigin(25.0f, 25.0f);//needs to set origin because physics create box using center origin
+		  s->addSprite("idle", b, a);
+
+		  oil_temp->entityType = EntityType::OIL;
+		  auto phy = oil_temp->addComponent<PhysicsComponent>(false, Vector2f(50.0f, 50.0f));
 		  phy->setRestitution(0.0f);
 	  }
   }
@@ -180,7 +210,7 @@ void Level1Scene::Load() {
 		  shared_ptr<Entity> f_temp = makeEntity(true);
 		  f_temp->setPosition(pos);
 		  auto s = f_temp->addComponent<SpriteComponent>();
-		  s->setSprite(Sprite(*(s->setTexture(p)),IntRect(0,0,150,150)));//adding texture internally and giving it to the animation as well
+		  s->setSprite(Sprite(*(s->setTexture(p)),IntRect(0,0,50,50)));//adding texture internally and giving it to the animation as well
 		  AnimatedSprite b(sf::seconds(0.1f), true, true);
 
 
@@ -200,11 +230,11 @@ void Level1Scene::Load() {
 		for (auto b : blade) {
 			Vector2f pos = ls::getTilePosition(b);
 			shared_ptr<Entity> enemy_temp = makeEntity(true);
-			enemy_temp->setPosition(pos);
+			enemy_temp->setPosition(pos + Vector2f(25.0f, 25.0f));
 			auto s = enemy_temp->addComponent<SpriteComponentAnimated>();
-			s->addFrames(a, 5, 2, 300.0f, 306.0f, 0.0f);
+			s->addFrames(a, 5, 2, 150.0f, 153.0f, 0.0f);
 			AnimatedSprite b(sf::seconds(0.05f), true, true);
-			b.setOrigin(150.0f, 153.0f);//needs to set origin because physics create box using center origin
+			b.setOrigin(75.0f, 76.5f);//needs to set origin because physics create box using center origin
 			a.setSpriteSheet(*(s->addTexture(p)));
 			s->addSprite("idle", b, a);
 			enemy_temp->entityType = EntityType::ENEMY;
@@ -270,11 +300,11 @@ void Level1Scene::Load() {
     auto walls = ls::findTiles(ls::WALL);
     for (auto w : walls) {
       auto pos = ls::getTilePosition(w);
-      pos += Vector2f(8.f, 8.f); //offset to center
+      pos += Vector2f(25.f, 25.f); //offset to center
       auto e = makeEntity(true);
 	  e->entityType = EntityType::WALL;
       e->setPosition(pos);
-      auto phy = e->addComponent<PhysicsComponent>(false, Vector2f(16.f, 16.f));
+      auto phy = e->addComponent<PhysicsComponent>(false, Vector2f(50.f, 50.f));
 	  phy->setRestitution(0.0f);
     }
   }

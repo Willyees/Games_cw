@@ -48,6 +48,7 @@ enum EntityType
 	SCORE,
 	LIFE,
 	ENEMY,
+	OIL,
 	POWERUP
 };
 class Entity {
