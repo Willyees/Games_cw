@@ -56,9 +56,9 @@ public:
 
   static bool isOnGrid(sf::Vector2f);
 
-  static size_t getWidth();
+  static float getWidth();
 
-  static size_t getHeight();
+  static float getHeight();
 
   static sf::Vector2f getTilePosition(sf::Vector2ul);
 

@@ -41,19 +41,26 @@ void Renderer::render() {
 	  spritesStatic.pop();
   }
   view.setCenter(view_temp_center);
+  
   //many cases, could be improved. TODO: add cases x and y are > mapWidth
   float x = view.getCenter().x;
   float y = view.getCenter().y;
   if (view.getCenter().x < rw->getSize().x / 2)
 	  x = rw->getSize().x / 2;
-  /*else if ((view.getCenter().x > (width -  rw->getSize().x / 2)) {
-	  x = width - rw->getSize().x / 2 
-  }*/
-  if (view.getCenter().y < rw->getSize().y / 2)
-	  y = rw->getSize().y / 2;
-  /*else if ((view.getCenter().y > (height -  rw->getSize().y / 2)) {
-  y = width - rw->getSize().y / 2
-  }*/
+  else if ((view.getCenter().x > (ls::getWidth() -  rw->getSize().x / 2))) {
+	  x = ls::getWidth() - rw->getSize().x / 2;
+  }
+  //checking if the map is higher than the screen first
+  if(ls::getHeight() > view.getSize().y) {
+	  if (view.getCenter().y < rw->getSize().y / 2)
+		  y = rw->getSize().y / 2;
+	  else if ((view.getCenter().y > (ls::getHeight() -  rw->getSize().y / 2))) {
+		  y = ls::getHeight() - rw->getSize().y / 2;
+	  }
+  }
+  else {
+	  y = ls::getHeight() / 2;
+  }
   view.setCenter(x, y);
   rw->setView(view);
 
