@@ -30,12 +30,12 @@ static shared_ptr<Entity> masher;
 void Level1Scene::UnlockNextScene() { _nextSceneUnlocked = true; }
 
 void Level1Scene::Load() {
-	menu.theme.stop();
+	/*menu.theme.stop();
 	if (!this->theme.openFromFile("res/musics/Vidian_-_aether_theories_1.ogg"))
 		cout << "Error: we not found music file";
 	this->theme.setLoop(true);
 	this->theme.setVolume(75);
-	this->theme.play();
+	this->theme.play();*/
 
   cout << " Scene 1 Load" << endl;
   ls::loadLevelFileJson("res/levels/Map.json");
@@ -412,6 +412,7 @@ void Level1Scene::UnLoad() {
 }
 
 void Level1Scene::Update(const double& dt) {
+	
 	
   if (ls::getTileAt(player->getPosition()) == ls::PORTAL && _nextSceneUnlocked == true) {
 	 

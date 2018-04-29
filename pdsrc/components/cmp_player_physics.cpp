@@ -39,11 +39,11 @@ void PlayerPhysicsComponent::update(double dt) {
     teleport(ls::getTilePosition(ls::findTiles(ls::START)[0]));
   }
 
-  if (Keyboard::isKeyPressed(Keyboard::Left) ||
-      Keyboard::isKeyPressed(Keyboard::Right) || 
+  if (Keyboard::isKeyPressed(Engine::user_preferences.keyboard.LEFT) ||
+      Keyboard::isKeyPressed(Engine::user_preferences.keyboard.RIGHT) ||
 	  Joystick::getAxisPosition(0, Joystick::X) < -10.0f || Joystick::getAxisPosition(0, Joystick::X) > 10.0f) {
     // Moving Either Left or Right
-    if (Keyboard::isKeyPressed(Keyboard::Right) || 
+    if (Keyboard::isKeyPressed(Engine::user_preferences.keyboard.RIGHT) ||
 		Joystick::getAxisPosition(0, Joystick::X) > 10.0f) {
 		
       if (getVelocity().x < _maxVelocity.x && (pos.x + dt * _groundspeed) < ls::getWidth())
@@ -78,7 +78,8 @@ void PlayerPhysicsComponent::update(double dt) {
   }
   
   // Handle Jump
-  if (Keyboard::isKeyPressed(Keyboard::Up) || Joystick::isButtonPressed(0, 0)) {
+  if (Keyboard::isKeyPressed(Engine::user_preferences.keyboard.UP) || 
+	  Joystick::isButtonPressed(0, Engine::user_preferences.controller.UP)) {
     _grounded = isGrounded();
 	if (previous == "right") {
 		_parent->setState("in air right");

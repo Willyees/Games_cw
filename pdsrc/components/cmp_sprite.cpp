@@ -88,6 +88,7 @@ Texture* SpriteComponentAnimated::addTexture(sf::Texture & texture)
 
 void SpriteComponentAnimated::swapTextures(std::vector<sf::Texture> textures)
 {
+	_texture->clear();
 	for (int i = 0; i < 5; i++) {
 		_texture->insert(_texture->begin() + i, textures.at(i));
 	}

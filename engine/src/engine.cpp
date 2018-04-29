@@ -14,6 +14,7 @@ using namespace std;
 Scene* Engine::_activeScene = nullptr;
 std::string Engine::_gameName;
 sf::View Renderer::view;
+UserPreferences Engine::user_preferences;
 
 static bool loading = false;
 static float loadingspinner = 0.f;
@@ -83,7 +84,8 @@ void Engine::Render(RenderWindow& window) {
 
 void Engine::Start(unsigned int width, unsigned int height,
                    const std::string& gameName, Scene* scn) {
-  RenderWindow window(VideoMode(width, height), gameName);
+	
+  RenderWindow window(VideoMode(width, height), gameName, user_preferences.video_resolution); //to make it full screen
   _gameName = gameName;
   _window = &window;
   Renderer::initialise(window);

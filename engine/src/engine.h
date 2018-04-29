@@ -1,4 +1,5 @@
 #pragma once
+#include "user_preferences.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -49,6 +50,7 @@ public:
   static sf::Vector2u getWindowSize();
   static void setVsync(bool b);
   static Scene* getActiveScene();
+  static UserPreferences user_preferences;
 private:
   static Scene* _activeScene;
   static std::string _gameName;
@@ -63,3 +65,4 @@ long long now();
 // Return time since last() was last called.
 long long last();
 } // namespace timing
+

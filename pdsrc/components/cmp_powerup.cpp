@@ -13,8 +13,9 @@ void PowerUpComponent::update(double dt) {
 			jumptime -= dt;
 			cout << jumptime << endl;
 			if (jumptime <= 0.f) {
-
+				//woudl be better to preload it during loading screen and then assign it when needed
 				pl->get_components<PlayerPhysicsComponent>()[0]->setImpStrenght(-10.f);
+				vector<Texture> temp;
 				Texture p;
 				p.loadFromFile("res/images/player_sprites/walk_right.png");
 				temp.push_back(p);
