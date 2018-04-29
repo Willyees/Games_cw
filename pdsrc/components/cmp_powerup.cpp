@@ -8,7 +8,6 @@ void PowerUpComponent::update(double dt) {
 	
 	static float jumptime = _jumptime;
 	
-	
 	if (auto pl = _player.lock()) {
 		if (countdown) {
 			jumptime -= dt;
@@ -16,7 +15,20 @@ void PowerUpComponent::update(double dt) {
 			if (jumptime <= 0.f) {
 
 				pl->get_components<PlayerPhysicsComponent>()[0]->setImpStrenght(-10.f);
+				Texture p;
+				p.loadFromFile("res/images/player_sprites/walk_right.png");
+				temp.push_back(p);
+				p.loadFromFile("res/images/player_sprites/walk_right.png");
+				temp.push_back(p);
+				p.loadFromFile("res/images/player_sprites/walk_left_1.png");
+				temp.push_back(p);
+				p.loadFromFile("res/images/player_sprites/jumpL.png");
+				temp.push_back(p);
+				p.loadFromFile("res/images/player_sprites/jumpR.png");
+				temp.push_back(p);
+				pl->get_components<SpriteComponentAnimated>()[0]->swapTextures(temp);
 				_parent->setForDelete();
+
 			}
 			return;
 		}
@@ -24,7 +36,20 @@ void PowerUpComponent::update(double dt) {
 			_parent->setVisible(false);
 			countdown = true;			
 			pl->get_components<PlayerPhysicsComponent>()[0]->setImpStrenght(-20.f);
-						
+			vector<Texture> temp;
+			Texture p;
+			p.loadFromFile("res/images/player_sprites/walk_right.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites/walk_right.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites/walk_left_1_green.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites/jumpL.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites/jumpR.png");
+			temp.push_back(p);
+			pl->get_components<SpriteComponentAnimated>()[0]->swapTextures(temp);
+			
 		}
 		
 	}

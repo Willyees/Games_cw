@@ -47,7 +47,8 @@ public:
 	FERTALIZER,
 	OIL,
 	PORTAL,
-	UNKNOWN
+	UNKNOWN,
+	INVISWALL
   };
 
   static TILES getTile(sf::Vector2ul);
@@ -122,8 +123,8 @@ public:
 	{limitElementTexture(13,13, ls::KEY)},
 	{ limitElementTexture(14,14, ls::PORTAL) },
 	{ limitElementTexture(15,15, ls::OIL) },
+	{ limitElementTexture(16,16, ls::INVISWALL) },
 
-	
 	//{limitElementTexture(48,48, ls::UNKNOWN)},
 	
 	};

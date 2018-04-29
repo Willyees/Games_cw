@@ -48,7 +48,7 @@ sf::Sprite& SpriteComponent::getSprite() const { return *_sprite; }
 SpriteComponentAnimated::SpriteComponentAnimated(Entity * p)
 	: Component(p), _currentSprite(make_shared<AnimatedSprite>()), _texture(make_shared<vector<Texture>>()) {
 	_texture->reserve(10);//reserving 10 spaces to avoid the reallocation of the texture inside of vector, leading to different pointers for the textures
-	_animations.reserve(10);
+	_animations.reserve(10); 
 }
 
 void SpriteComponentAnimated::update(double dt)
@@ -84,6 +84,13 @@ Texture* SpriteComponentAnimated::addTexture(sf::Texture & texture)
 {
 	_texture->push_back(texture);
 	return &(_texture->back());
+}
+
+void SpriteComponentAnimated::swapTextures(std::vector<sf::Texture> textures)
+{
+	for (int i = 0; i < 5; i++) {
+		_texture->insert(_texture->begin() + i, textures.at(i));
+	}
 }
 
 AnimatedSprite & SpriteComponentAnimated::getSprite() const

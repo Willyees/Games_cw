@@ -13,6 +13,7 @@ protected:
 	std::vector<Animation> _animations;
 	std::map<std::string, AnimatedSprite> _sprites;
 	std::shared_ptr<std::vector<sf::Texture>> _texture;
+	std::shared_ptr<std::vector<sf::Texture>> _texture_temp;
 	std::string state;
 public:
 	SpriteComponentAnimated() = delete;
@@ -21,6 +22,7 @@ public:
 	void update(double dt) override;
 	void render() override;
 	sf::Texture* addTexture(sf::Texture& texture);
+	void swapTextures(std::vector<sf::Texture>);
 	
 	AnimatedSprite& getSprite() const;
 	void addSprite(std::string key, AnimatedSprite sprite, Animation animation);

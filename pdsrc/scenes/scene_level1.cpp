@@ -320,6 +320,19 @@ void Level1Scene::Load() {
 	  phy->setRestitution(0.0f);
     }
   }
+  //add physics colliders invisible walls
+  {
+	  auto walls = ls::findTiles(ls::INVISWALL);
+	  for (auto w : walls) {
+		  auto pos = ls::getTilePosition(w);
+		  pos += Vector2f(25.f, 25.f); //offset to center
+		  auto e = makeEntity(true);
+		  e->entityType = EntityType::WALL;
+		  e->setPosition(pos);
+		  auto phy = e->addComponent<PhysicsComponent>(false, Vector2f(50.f, 50.f));
+		  phy->setRestitution(0.0f);
+	  }
+  }
   //Add life
   {
 	  Texture p;
