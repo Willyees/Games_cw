@@ -125,6 +125,7 @@ void Level1Scene::Load() {
 
 	auto phy = player->addComponent<PlayerPhysicsComponent>(Vector2f(60.0f, 90.0f));
 	phy->setRestitution(0.0f);
+	
 	player->addComponent<LifeComponent>(3);
 	//set view to center on player
 	Renderer::view.reset(sf::FloatRect(player->getPosition().x, player->getPosition().y, Engine::getWindowSize().x, Engine::getWindowSize().y));
@@ -357,7 +358,8 @@ void Level1Scene::Load() {
 	  Animation a;
 	  
 	  auto enemies = ls::findTiles(ls::ENEMY);
-	  for (auto e : enemies) {
+	  //auto e = enemies[1];
+	 for (auto e : enemies) {
 		  Vector2f pos = ls::getTilePosition(e);
 		  pos += Vector2f(8.0f, 8.0f);
 		  shared_ptr<Entity> enemy_temp = makeEntity(true);
@@ -370,7 +372,7 @@ void Level1Scene::Load() {
 		  a.setSpriteSheet(*(s->addTexture(p)));
 		  s->addSprite("idle", b, a);
 		  enemy_temp->entityType = EntityType::ENEMY;
-		  enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(16.0f, 16.0f));
+		  //enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(16.0f, 16.0f));
 		  enemy_temp->addComponent<EnemyTurretComponent>();
 	  }
 		  
@@ -480,6 +482,7 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 		{
 		case EntityType::PLAYER:
 			entityB->get_components<LifeComponent>().front()->reduceLives();
+			entityA->get_components<PhysicsComponent>()[0]->dampen(Vector2f(0.0f, 0.0f));
 			entityA->setForDelete();
 			break;
 		case EntityType::WALL:
@@ -513,7 +516,9 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 		{
 		case EntityType::PLAYER:
 			entityA->get_components<LifeComponent>().front()->reduceLives();
+			entityB->get_components<PhysicsComponent>()[0]->dampen(Vector2f(0.0f, 0.0f));
 			entityB->setForDelete();
+			
 			break;
 		case EntityType::WALL:
 			entityB->setForDelete();

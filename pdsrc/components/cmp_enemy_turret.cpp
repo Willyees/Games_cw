@@ -9,10 +9,15 @@ using namespace std;
 using namespace sf;
 
 void EnemyTurretComponent::update(double dt) {
-  _firetime -= dt;
+	//cannot use a static variable because it would be shared between all the implementation of this component and modified at each call to update
+	if (auto pl = _player.lock()) {
+		if (length(pl->getPosition() - _parent->getPosition()) < 600.0)
+			_firetime -= dt;
+	}
+
   if (_firetime <= 0.f) {
     fire();
-    _firetime = 1.f;
+    _firetime = 3.f;
   }
   static float angle = 0.f;
   angle += 1.f * dt;
@@ -33,7 +38,7 @@ void EnemyTurretComponent::fire() const {
 	Animation a;
 	s->addFrames(a, 4, 1, 50.0f, 44.75f,0.0f);
 
-	AnimatedSprite as(sf::seconds(0.05f), true, true);
+	AnimatedSprite as(sf::seconds(0.08f), true, true);
 	a.setSpriteSheet(*(s->addTexture(p1)));
 	as.setOrigin(25.f, 22.4f);
 	s->addSprite("idle", as, a);
@@ -44,13 +49,16 @@ void EnemyTurretComponent::fire() const {
 	s->getShape().setFillColor(Color::Red);
 	*/
 	auto p = bullet->addComponent<PhysicsComponent>(true, Vector2f(50.f, 44.75f));
-	p->setRestitution(.1f);
+	p->setRestitution(0.0f);
 	p->setFriction(.005f);
+	p->setMass(0.005);
+	
 	if (auto pl = _player.lock()) {
 		//p->impulse(Vector2f(-50.0f, 25.0f));
 		/*p->impulse(sf::rotate(Vector2f(0, 15.f), -_parent->getRotation()));*/
 		//improve using center of entity
 		Vector2f direction(pl->getPosition().x - _parent->getPosition().x, pl->getPosition().y - _parent->getPosition().y);
+		cout << direction << endl;
 		float length_vector = sqrt(pow(direction.x, 2) + pow(direction.y, 2));
 		p->impulse(direction / length_vector * _speed);
 		
@@ -60,4 +68,4 @@ void EnemyTurretComponent::fire() const {
 void EnemyTurretComponent::setSpeed(float& speed) { _speed = speed; }
 
 EnemyTurretComponent::EnemyTurretComponent(Entity* p)
-    : Component(p), _firetime(2.f) , _player(_parent->scene->ents.find("player")[0]), _speed(20.0f){}
+    : Component(p), _firetime(3.f) , _player(_parent->scene->ents.find("player")[0]), _speed(15.0f){}
