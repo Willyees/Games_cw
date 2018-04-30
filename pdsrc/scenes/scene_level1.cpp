@@ -398,9 +398,11 @@ void Level1Scene::Load() {
   }
 
   {
-	// Pause menu.
+	  // Pause menu.
+	  _paused = false;
 	  _pausetex.loadFromFile( "res/images/pause.png" );
 	  _playtex.loadFromFile( "res/images/play.png" );
+	  _pausesprite.setTexture( _pausetex );
 
 	  const int border = 15;
 	  const int size = 100;
@@ -417,6 +419,16 @@ void Level1Scene::Load() {
 	  _resetrect.top = border;
 	  _resetrect.height = size;
 	  _resetrect.width = size;
+
+	  // Back to menu button.
+	  _backtex.loadFromFile( "res/images/back.png" );
+	  _backsprite.setTexture( _backtex );
+
+	  _backrect.left = border + size + border + size + border;
+	  _backrect.top = border;
+	  _backrect.height = size;
+	  _backrect.width = size;
+
   }
 
   //Simulate long loading times
@@ -448,12 +460,23 @@ void Level1Scene::Update(const double& dt) {
 			{
 				_paused = !_paused;
 				Engine::setPhysicsPause( _paused );
+				if( _paused )
+					_pausesprite.setTexture( _playtex, true );
+				else _pausesprite.setTexture( _pausetex, true );
+
 			}
 
 			if( _resetrect.contains( mpos ) )
 			{
 				// Restart game.
 				Engine::ChangeScene( &level1 );
+				return;
+			}
+
+			if( _backrect.contains( mpos ) )
+			{
+				Engine::ChangeScene( &menu );
+				return;
 			}
 
 			mouse_released = false;
@@ -507,6 +530,16 @@ void Level1Scene::Update(const double& dt) {
   
 }
 
+// Small helper that scales and moves a sprite to a target rectangle and renders it to screen.
+void drawSpriteTo( sf::RenderWindow* window, Sprite* sprite, IntRect target )
+{
+	Vector2f sourceSize = Vector2f( sprite->getTexture()->getSize() );
+	Vector2f scale = Vector2f( target.width / sourceSize.x, target.height / sourceSize.y );
+	sprite->setPosition( Vector2f( target.left + target.width, target.top + target.height * 2 ) );
+	sprite->setScale( scale );
+	window->draw( *sprite );
+}
+
 void Level1Scene::Render() {
 
   auto& window = Engine::GetWindow();
@@ -523,25 +556,16 @@ void Level1Scene::Render() {
   auto oldview = window.getView();
 
   // Setup a separate view for GUI rendering.
+  // This makes sure that the GUI positions are not in world position but relative to
+  // The corner of the screen.
   sf::View GUIView;
   GUIView.setSize( Vector2f( window.getSize() ) );
   window.setView( GUIView );
-  if( _paused )
-	  _pausesprite.setTexture( _playtex, true );
-  else _pausesprite.setTexture( _pausetex, true );
-  Vector2f pauseSourceSize = Vector2f( _pausetex.getSize() );
-  Vector2f pauseTargetSize = Vector2f( _pauserect.width, _pauserect.height );
-  Vector2f pausescale = Vector2f( pauseTargetSize.x / pauseSourceSize.x, pauseTargetSize.y / pauseSourceSize.y );
-  _pausesprite.setPosition( Vector2f( _pauserect.left + _pauserect.width, _pauserect.top + _pauserect.height * 2 ) );
-  _pausesprite.setScale( pausescale );
-  window.draw( _pausesprite );
 
-  Vector2f resetSourceSize = Vector2f( _resettex.getSize() );
-  Vector2f resetTargetSize = Vector2f( _resetrect.width, _resetrect.height );
-  Vector2f resetscale = Vector2f( resetTargetSize.x / resetSourceSize.x, resetTargetSize.y / resetSourceSize.y );
-  _resetsprite.setPosition( Vector2f( _resetrect.left + _resetrect.width, _resetrect.top + _resetrect.height * 2 ) );
-  _resetsprite.setScale( resetscale );
-  window.draw( _resetsprite );
+  // Render GUI buttons.
+  drawSpriteTo( &window, &_pausesprite, _pauserect );
+  drawSpriteTo( &window, &_resetsprite, _resetrect );
+  drawSpriteTo( &window, &_backsprite, _backrect );
 
   // Restore game view after rendering GUI.
   window.setView( oldview );
