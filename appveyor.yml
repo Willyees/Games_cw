@@ -18,6 +18,6 @@ before_build:
     cmake -G "Visual Studio 15 2017 Win64" ../
     
 build:
-    project: "build/Potato's Destiny_cw.sln"
+    project: "build/pd.vcxproj"
     parallel: true
     verbosity: minimal
