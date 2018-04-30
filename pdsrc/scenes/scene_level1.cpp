@@ -405,7 +405,7 @@ void Level1Scene::Load() {
 	  _pausesprite.setTexture( _pausetex );
 
 	  const int border = 15;
-	  const int size = 100;
+	  const int size = 75;
 	  _pauserect.left = border;
 	  _pauserect.top = border;
 	  _pauserect.height = size;
@@ -415,7 +415,7 @@ void Level1Scene::Load() {
 	  _resettex.loadFromFile( "res/images/restart.png" );
 	  _resetsprite.setTexture( _resettex );
 	  
-	  _resetrect.left = border + size + border;
+	  _resetrect.left = _pauserect.left + size + border;
 	  _resetrect.top = border;
 	  _resetrect.height = size;
 	  _resetrect.width = size;
@@ -424,10 +424,28 @@ void Level1Scene::Load() {
 	  _backtex.loadFromFile( "res/images/back.png" );
 	  _backsprite.setTexture( _backtex );
 
-	  _backrect.left = border + size + border + size + border;
+	  _backrect.left = _resetrect.left + size + border;
 	  _backrect.top = border;
 	  _backrect.height = size;
 	  _backrect.width = size;
+
+	  // Save button.
+	  _savetex.loadFromFile( "res/images/save.png" );
+	  _savesprite.setTexture( _savetex );
+
+	  _saverect.left = _backrect.left + size + border;
+	  _saverect.top = border;
+	  _saverect.width = size;
+	  _saverect.height = size;
+
+	  // Load button.
+	  _loadtex.loadFromFile( "res/images/load.png" );
+	  _loadsprite.setTexture( _loadtex );
+
+	  _loadrect.left = _saverect.left + size + border;
+	  _loadrect.top = border;
+	  _loadrect.width = size;
+	  _loadrect.height = size;
 
   }
 
@@ -477,6 +495,16 @@ void Level1Scene::Update(const double& dt) {
 			{
 				Engine::ChangeScene( &menu );
 				return;
+			}
+
+			if( _saverect.contains( mpos ) )
+			{
+				SaveState();
+			}
+
+			if( _loadrect.contains( mpos ) )
+			{
+				LoadState();
 			}
 
 			mouse_released = false;
@@ -535,7 +563,7 @@ void drawSpriteTo( sf::RenderWindow* window, Sprite* sprite, IntRect target )
 {
 	Vector2f sourceSize = Vector2f( sprite->getTexture()->getSize() );
 	Vector2f scale = Vector2f( target.width / sourceSize.x, target.height / sourceSize.y );
-	sprite->setPosition( Vector2f( target.left + target.width, target.top + target.height * 2 ) );
+	sprite->setPosition( Vector2f( target.left, target.top ) );
 	sprite->setScale( scale );
 	window->draw( *sprite );
 }
@@ -559,13 +587,16 @@ void Level1Scene::Render() {
   // This makes sure that the GUI positions are not in world position but relative to
   // The corner of the screen.
   sf::View GUIView;
-  GUIView.setSize( Vector2f( window.getSize() ) );
+  Vector2f windowSize = Vector2f( window.getSize() );
+  GUIView.reset( FloatRect( 0.0f, 0.0f, windowSize.x, windowSize.y ) );
   window.setView( GUIView );
 
   // Render GUI buttons.
   drawSpriteTo( &window, &_pausesprite, _pauserect );
   drawSpriteTo( &window, &_resetsprite, _resetrect );
   drawSpriteTo( &window, &_backsprite, _backrect );
+  drawSpriteTo( &window, &_savesprite, _saverect );
+  drawSpriteTo( &window, &_loadsprite, _loadrect );
 
   // Restore game view after rendering GUI.
   window.setView( oldview );
@@ -642,3 +673,13 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 		
 }
 
+
+void Level1Scene::SaveState()
+{
+
+}
+
+void Level1Scene::LoadState()
+{
+
+}
