@@ -125,9 +125,8 @@ public:
 	{limitElementTexture(13,13, ls::KEY)},
 	{ limitElementTexture(14,14, ls::PORTAL) },
 	{ limitElementTexture(15,15, ls::OIL) },
-	{ limitElementTexture(16,16, ls:: INVISWALL) },
-	{ limitElementTexture(17,17, ls::WALL) },
-	//{limitElementTexture(48,48, ls::UNKNOWN)},
+	{ limitElementTexture(16,17, ls:: INVISWALL) },
+
 	
 	};
 	

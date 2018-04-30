@@ -127,7 +127,7 @@ void LevelSystem::buildSprites() {
 		for (size_t x = 0; x < helper->_json.columns_map; ++x) {
 			int gid = helper->_json.data.at(helper->_json.columns_map*y + x);
 			ls::TILES t = getTile({ x,y });
-			if (t == EMPTY /*|| t == COIN || t == ENEMY || t == START*/) {
+			if (t != WALL/*|| t == COIN || t == ENEMY || t == START*/) {
 				continue;
 			}
 			

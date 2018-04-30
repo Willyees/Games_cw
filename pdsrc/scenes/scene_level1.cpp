@@ -207,11 +207,7 @@ void Level1Scene::Load() {
 		  auto phy = oil_temp->addComponent<PhysicsComponent>(false, Vector2f(50.0f, 50.0f));
 		  oil_temp->addComponent<HurtComponent>();
 		  phy->setRestitution(0.0f);
-		  if (!this->theme.openFromFile("res/audio/oil.mp3"))
-			  cout << "Error: we not found music file";
-		  this->theme.setLoop(true);
-		  this->theme.setVolume(75);
-		  this->theme.play();
+		 
 	  }
   }
   // Add Fertilizer
