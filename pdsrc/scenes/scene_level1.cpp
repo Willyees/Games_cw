@@ -26,6 +26,7 @@ static shared_ptr<Entity> player;
 static shared_ptr<Entity> score;
 static shared_ptr<Texture> background_text;
 static shared_ptr<Entity> masher;
+static shared_ptr<Entity> enemy_temp;
 
 void Level1Scene::UnlockNextScene() { _nextSceneUnlocked = true; }
 
@@ -251,7 +252,7 @@ void Level1Scene::Load() {
 			a.setSpriteSheet(*(s->addTexture(p)));
 			s->addSprite("idle", b, a);
 			enemy_temp->entityType = EntityType::ENEMY;
-			enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(150.0f, 153.0f));
+			//enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(140.0f, 143.0f));
 			enemy_temp->addComponent<HurtComponent>();
 			//enemy_temp->addComponent<EnemyTurretComponent>();
 		}
@@ -273,9 +274,7 @@ void Level1Scene::Load() {
 			auto m = makeEntity(true);
 			m->setPosition(pos);
 			auto s = m->addComponent<SpriteComponentAnimated>();
-			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 64.0f));
-			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 86.0f));
-			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 132.0f));
+
 			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 171.0f));
 			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 203.0f));
 			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 244.0f));
@@ -285,7 +284,7 @@ void Level1Scene::Load() {
 			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 336.0f));
 			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 372.0f));
 			/*s->addFrames(a, 11, 5, 179.0f, 435.0f, 0.0f);*/
-			AnimatedSprite b(sf::seconds(0.1f), true, true);
+			AnimatedSprite b(sf::seconds(0.15f), true, true);
 			//b.setOrigin(89.5f, 217.5f);//needs to set origin because physics create box using center origin
 			a.setSpriteSheet(*(s->addTexture(chain)));
 			s->addSprite("idle", b, a);
@@ -352,29 +351,29 @@ void Level1Scene::Load() {
   {
 	  
 	  Texture p;
-	  p.loadFromFile("res/images/TileSet1.png");
+	  p.loadFromFile("res/images/chefL.png");
 	  //add enemy texture to "textures"
 	  
 	  Animation a;
 	  
 	  auto enemies = ls::findTiles(ls::ENEMY);
-	  //auto e = enemies[1];
-	 for (auto e : enemies) {
+	 auto e = enemies[1];
+	 //for (auto e : enemies) {
 		  Vector2f pos = ls::getTilePosition(e);
-		  pos += Vector2f(8.0f, 8.0f);
-		  shared_ptr<Entity> enemy_temp = makeEntity(true);
+		  pos += Vector2f(25.0f, 25.0f);
+		  enemy_temp = makeEntity(true);
 		  enemy_temp->setPosition(pos);
 		  auto s = enemy_temp->addComponent<SpriteComponentAnimated>();
 
-		  s->addFrames(a, 10, 5, 16.0f, 16.0f, 0.0f);
-		  AnimatedSprite b(sf::seconds(0.05f), true, true);
-		  s->getSprite().setOrigin(8.0f, 8.0f);//needs to set origin because physics create box using center origin
+		  s->addFrames(a, 6, 3, 120.0f, 135.0f, 0.0f);
+		  AnimatedSprite b(sf::seconds(0.15f), true, true);
+		  b.setOrigin(100.0f, 97.0f);//needs to set origin because physics create box using center origin
 		  a.setSpriteSheet(*(s->addTexture(p)));
 		  s->addSprite("idle", b, a);
 		  enemy_temp->entityType = EntityType::ENEMY;
-		  //enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(16.0f, 16.0f));
+		  //enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(60.0f, 30.0f));
 		  enemy_temp->addComponent<EnemyTurretComponent>();
-	  }
+	  //}
 		  
   }
   //TODO: find key sprite and fix all the sizes.
