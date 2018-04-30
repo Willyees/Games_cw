@@ -408,6 +408,15 @@ void Level1Scene::Load() {
 	  _pauserect.top = border;
 	  _pauserect.height = size;
 	  _pauserect.width = size;
+
+	  // Reset button.
+	  _resettex.loadFromFile( "res/images/restart.png" );
+	  _resetsprite.setTexture( _resettex );
+	  
+	  _resetrect.left = border + size + border;
+	  _resetrect.top = border;
+	  _resetrect.height = size;
+	  _resetrect.width = size;
   }
 
   //Simulate long loading times
@@ -439,6 +448,12 @@ void Level1Scene::Update(const double& dt) {
 			{
 				_paused = !_paused;
 			}
+
+			if( _resetrect.contains( mpos ) )
+			{
+				// Restart game.
+			}
+
 			mouse_released = false;
 		}
 	}
@@ -518,6 +533,13 @@ void Level1Scene::Render() {
   _pausesprite.setPosition( Vector2f( _pauserect.left + _pauserect.width, _pauserect.top + _pauserect.height * 2 ) );
   _pausesprite.setScale( pausescale );
   window.draw( _pausesprite );
+
+  Vector2f resetSourceSize = Vector2f( _resettex.getSize() );
+  Vector2f resetTargetSize = Vector2f( _resetrect.width, _resetrect.height );
+  Vector2f resetscale = Vector2f( resetTargetSize.x / resetSourceSize.x, resetTargetSize.y / resetSourceSize.y );
+  _resetsprite.setPosition( Vector2f( _resetrect.left + _resetrect.width, _resetrect.top + _resetrect.height * 2 ) );
+  _resetsprite.setScale( resetscale );
+  window.draw( _resetsprite );
 
   // Restore game view after rendering GUI.
   window.setView( oldview );

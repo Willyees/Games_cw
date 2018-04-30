@@ -15,6 +15,10 @@ private:
 	sf::Sprite _pausesprite;
 	sf::IntRect _pauserect;
 
+	sf::Texture _resettex;
+	sf::Sprite _resetsprite;
+	sf::IntRect _resetrect;
+
 public:
   void UnlockNextScene();
   void Load() override;
