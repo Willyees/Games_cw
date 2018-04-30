@@ -18,8 +18,27 @@ void MenuScene::Load() {
 	this->theme.setLoop(true);
 	this->theme.setVolume(75);
 	this->theme.play();
+	
+	Animation a1;
+	Texture p;
+	p.loadFromFile("res/images/BG_menuPD.png");
 
-  cout << "Menu Load \n";
+	auto sprite = makeEntity(false);
+	auto cmp = sprite->addComponent<SpriteComponentAnimated>();
+	a1.setSpriteSheet(*(cmp->addTexture(p)));
+	cmp->addFrames(a1, 37, 4, 1000.0f, 410.0f, 0.0f);
+	AnimatedSprite b(sf::seconds(0.20f), true, true);
+	b.setOrigin(Engine::getWindowSize().x, Engine::getWindowSize().y);
+	b.setPosition(Vector2f(Engine::getWindowSize().x/2, Engine::getWindowSize().y/2));
+	cmp->setSprite(b);
+	cmp->getSprite().setAnimation(a1);
+	cmp->getSprite().setOrigin(500.0f, 205.0f);
+	cmp->addSprite("idle", b, a1);
+	sprite->setPosition(Vector2f(Engine::getWindowSize().x / 2, Engine::getWindowSize().y / 2));
+	
+	setLoaded(true);
+  
+	cout << "Menu Load \n";
   {
 	
     auto title = makeEntity(false);
@@ -64,23 +83,7 @@ void MenuScene::Load() {
   
   
   
-  Animation a1;
-  Texture p;
-  p.loadFromFile("res/images/ezgif.com-gif-maker640widthtransparent2.png");
   
-  auto sprite = makeEntity(false);
-  auto cmp = sprite->addComponent<SpriteComponentAnimated>();
-  a1.setSpriteSheet(*(cmp->addTexture(p)));
-  cmp->addFrames(a1, 41, 5, 640.0f, 480.0f, 0.0f);
-  AnimatedSprite b(sf::seconds(0.05f), true, true);
-  b.setPosition(Vector2f(300.0f, 300.0f));
-  cmp->setSprite(b);
-  cmp->getSprite().setAnimation(a1);
-  
-  cmp->addSprite("idle", b, a1);
-  sprite->setPosition(Vector2f(300.f, 300.f));
-  
-  setLoaded(true);
 }
 
 void MenuScene::Update(const double& dt) {
