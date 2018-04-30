@@ -88,7 +88,7 @@ void Engine::Render(RenderWindow& window) {
 
 void Engine::Start(unsigned int width, unsigned int height,
                    const std::string& gameName, Scene* scn) {
-	
+  user_preferences.video_resolution_default = Vector2f(width, height);//store default resolution in order to use it when not on fullscreen
   RenderWindow window(VideoMode(width, height), gameName, user_preferences.fullscreen); //to make it full screen
   _gameName = gameName;
   _window = &window;

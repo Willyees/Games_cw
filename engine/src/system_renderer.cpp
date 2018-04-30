@@ -30,7 +30,23 @@ void Renderer::render() {
     throw("No render window set! ");
   }
   //set view size in case window size has been changed
-  Engine::GetWindow().setSize(Vector2u(Engine::user_preferences.video_resolution));
+  if (Engine::user_preferences.changed_resolution || Engine::user_preferences.changed_fullscreen) {
+	  if(Engine::user_preferences.fullscreen == 8) {
+		  Engine::GetWindow().create(VideoMode(Engine::user_preferences.video_resolution.x, Engine::user_preferences.video_resolution.y), "Potato's Destiny", Engine::user_preferences.fullscreen);
+		  Engine::user_preferences.changed_fullscreen = false;
+		  Engine::user_preferences.changed_resolution = false;
+	  }
+	  else if(Engine::user_preferences.fullscreen == 7) {
+		  if(Engine::user_preferences.changed_resolution) {
+			  Engine::user_preferences.changed_resolution = false;
+		  }
+		  else {
+			  Engine::GetWindow().create(VideoMode(Engine::user_preferences.video_resolution_default.x, Engine::user_preferences.video_resolution_default.y), "Potato's Destiny", Engine::user_preferences.fullscreen);
+			  Engine::user_preferences.changed_fullscreen = false;
+		  }
+		  
+	  }
+  }
   view.setSize(Vector2f(Engine::getWindowSize()));
   
   Vector2f view_temp_center = view.getCenter();
