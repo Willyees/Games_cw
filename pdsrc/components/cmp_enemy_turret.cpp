@@ -63,6 +63,6 @@ void EnemyTurretComponent::fire() const {
 void EnemyTurretComponent::setSpeed(float& speed) { _speed = speed; }
 
 EnemyTurretComponent::EnemyTurretComponent(Entity* p)
-    : Component(p), _firetime(3.f) , _player(_parent->scene->ents.find("player")[0]), _speed(05.0f){
+    : Component(p), _firetime(3.f) , _player(_parent->scene->ents.find("player")[0]), _speed(15.0f){
 	
 }
