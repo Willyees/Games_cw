@@ -11,6 +11,7 @@
 #include "../game.h"
 #include <LevelSystem.h>
 #include <iostream>
+#include <fstream>
 #include <thread>
 #include <SFML\Graphics\View.hpp>
 #include <SFML\Graphics.hpp>
@@ -673,13 +674,56 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 		
 }
 
+const std::string savepath = "level1.save";
 
 void Level1Scene::SaveState()
 {
+	std::ofstream savefile( savepath );
 
+	if( !savefile.is_open() )
+	{
+		std::cerr << "Error while opening file for writing: " << savepath << std::endl;
+		return;
+	}
+
+	// We save player position, player lives and score.
+	Vector2f position = player->getPosition();
+	auto lives = player->GetCompatibleComponent<LifeComponent>();
+	assert( lives.size() );
+
+
+	savefile << position.x << " " << position.y << std::endl;
+	savefile << lives[0]->getLives() << std::endl;
+	savefile << scorePoints;
 }
 
 void Level1Scene::LoadState()
 {
+	std::ifstream savefile( savepath );
+	if( !savefile.is_open() )
+	{
+		std::cerr << "Error while opening save file: " << savepath << std::endl;
+		return;
+	}
 
+	Vector2f position;
+	int lives;
+	int score;
+	// Load values from the files
+	savefile >> position.x >> position.y >> lives >> score;
+
+	// First we need to get the lifecomponent and set its lives value.
+	auto lifecomp = player->GetCompatibleComponent<LifeComponent>();
+	assert( lifecomp.size() );
+	lifecomp[0]->setLives( lives );
+
+	// Changing score is just this assignment, text gets automatically updated.
+	scorePoints = score;
+
+	// For the position we need to update the physics body position as well
+	// because the link between that and entity position is one way only.
+	auto body = player->GetCompatibleComponent<PhysicsComponent>();
+	player->setPosition( position );
+	body[0]->teleport( position );
+	
 }

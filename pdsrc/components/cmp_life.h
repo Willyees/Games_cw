@@ -11,6 +11,7 @@ public:
 	void update(double dt) override;
 	void render() override {};
 	int getLives();
+	void setLives( int lives );
 	void reduceLives();
 	void increaseLives();
 	explicit LifeComponent(Entity* p, int lives);

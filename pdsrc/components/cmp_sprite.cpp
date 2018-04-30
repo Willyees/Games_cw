@@ -154,6 +154,11 @@ void SpriteComponentRepeted::decreaseRep()
 	_repetition--;
 }
 
+void SpriteComponentRepeted::setRep( int reps )
+{
+	_repetition = reps;
+}
+
 Texture* SpriteComponentRepeted::setTexture(Texture & texture)
 {
 	*_texture = texture;

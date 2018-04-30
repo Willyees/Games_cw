@@ -62,6 +62,7 @@ public:
 	void update(double dt) override;
 	void render() override;
 	void decreaseRep();
+	void setRep( int rep );
 
 	sf::Texture* setTexture(sf::Texture& texture);
 	//sf::Sprite& getSprite() const;

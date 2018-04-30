@@ -35,6 +35,12 @@ int LifeComponent::getLives()
 	return _lives;
 }
 
+void LifeComponent::setLives( int lives )
+{
+	_lives = lives;
+	Engine::getActiveScene()->ents.find( "life" )[0]->get_components<SpriteComponentRepeted>()[0]->setRep( _lives );
+}
+
 void LifeComponent::reduceLives() { 
 	if(_state != "invincible"){
 		_lives --;
