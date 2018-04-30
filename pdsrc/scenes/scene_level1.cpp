@@ -419,6 +419,16 @@ void Level1Scene::Load() {
 	  _resetrect.top = border;
 	  _resetrect.height = size;
 	  _resetrect.width = size;
+
+	  // Back to menu button.
+	  _backtex.loadFromFile( "res/images/back.png" );
+	  _backsprite.setTexture( _backtex );
+
+	  _backrect.left = border + size + border + size + border;
+	  _backrect.top = border;
+	  _backrect.height = size;
+	  _backrect.width = size;
+
   }
 
   //Simulate long loading times
@@ -460,6 +470,13 @@ void Level1Scene::Update(const double& dt) {
 			{
 				// Restart game.
 				Engine::ChangeScene( &level1 );
+				return;
+			}
+
+			if( _backrect.contains( mpos ) )
+			{
+				Engine::ChangeScene( &menu );
+				return;
 			}
 
 			mouse_released = false;
@@ -513,6 +530,7 @@ void Level1Scene::Update(const double& dt) {
   
 }
 
+// Small helper that scales and moves a sprite to a target rectangle and renders it to screen.
 void drawSpriteTo( sf::RenderWindow* window, Sprite* sprite, IntRect target )
 {
 	Vector2f sourceSize = Vector2f( sprite->getTexture()->getSize() );
@@ -538,12 +556,16 @@ void Level1Scene::Render() {
   auto oldview = window.getView();
 
   // Setup a separate view for GUI rendering.
+  // This makes sure that the GUI positions are not in world position but relative to
+  // The corner of the screen.
   sf::View GUIView;
   GUIView.setSize( Vector2f( window.getSize() ) );
   window.setView( GUIView );
+
+  // Render GUI buttons.
   drawSpriteTo( &window, &_pausesprite, _pauserect );
-  
   drawSpriteTo( &window, &_resetsprite, _resetrect );
+  drawSpriteTo( &window, &_backsprite, _backrect );
 
   // Restore game view after rendering GUI.
   window.setView( oldview );

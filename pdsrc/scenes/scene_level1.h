@@ -19,6 +19,10 @@ private:
 	sf::Sprite _resetsprite;
 	sf::IntRect _resetrect;
 
+	sf::Texture _backtex;
+	sf::Sprite _backsprite;
+	sf::IntRect _backrect;
+
 public:
   void UnlockNextScene();
   void Load() override;
