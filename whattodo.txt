@@ -13,8 +13,8 @@ Games Eng CW what to do:
 -remappable controls
 -Graphics options (Resolution & window mode)
 -Single file .exe game installer/uninstaller
--User preference(+savegame where applicable) saving/loading from disk
--Ability to quit to menu, and restart game
+-User preference(+savegame where applicable) saving/loading from disk  (- DONE)
+-Ability to quit to menu, and restart game, pause          (- DONE)
 
 
 TO Remember:
