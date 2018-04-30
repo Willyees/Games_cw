@@ -14,18 +14,18 @@ void PowerUpComponent::update(double dt) {
 			cout << jumptime << endl;
 			if (jumptime <= 0.f) {
 				//woudl be better to preload it during loading screen and then assign it when needed
-				pl->get_components<PlayerPhysicsComponent>()[0]->setImpStrenght(-10.f);
+				pl->get_components<PlayerPhysicsComponent>()[0]->setImpStrenght(-8.5f);
 				vector<Texture> temp;
 				Texture p;
-				p.loadFromFile("res/images/player_sprites/walk_right.png");
+				p.loadFromFile("res/images/player_sprites2/swalk_right.png");
 				temp.push_back(p);
-				p.loadFromFile("res/images/player_sprites/walk_right.png");
+				p.loadFromFile("res/images/player_sprites2/swalk_right.png");
 				temp.push_back(p);
-				p.loadFromFile("res/images/player_sprites/walk_left_1.png");
+				p.loadFromFile("res/images/player_sprites2/swalk_left_1.png");
 				temp.push_back(p);
-				p.loadFromFile("res/images/player_sprites/jumpL.png");
+				p.loadFromFile("res/images/player_sprites2/sjumpL.png");
 				temp.push_back(p);
-				p.loadFromFile("res/images/player_sprites/jumpR.png");
+				p.loadFromFile("res/images/player_sprites2/sjumpR.png");
 				temp.push_back(p);
 				pl->get_components<SpriteComponentAnimated>()[0]->swapTextures(temp);
 				_parent->setForDelete();
@@ -36,7 +36,7 @@ void PowerUpComponent::update(double dt) {
 		if (length(pl->getPosition() - _parent->getPosition()) < 50.0) {
 			_parent->setVisible(false);
 			countdown = true;			
-			pl->get_components<PlayerPhysicsComponent>()[0]->setImpStrenght(-20.f);
+			pl->get_components<PlayerPhysicsComponent>()[0]->setImpStrenght(-12.f);
 			vector<Texture> temp;
 			Texture p;
 			p.loadFromFile("res/images/player_sprites/walk_right.png");

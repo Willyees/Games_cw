@@ -3,9 +3,12 @@
 #include "engine.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
+#include "scene_menu.h"
+#include "system_renderer.h"
 
 using namespace std;
 using namespace sf;
+MenuScene menu1;
 
 void GameOverScene::Load()
 {
@@ -14,6 +17,8 @@ void GameOverScene::Load()
 	{
 		auto text_game = makeEntity(false);
 		text_game->addComponent<TextComponent>("GAME OVER!");
+		Engine::Start(1200, 800, "TRY AGAIN?", &menu1);
+
 	}
 	setLoaded(true);
 }

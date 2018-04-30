@@ -13,16 +13,17 @@ void EnemyTurretComponent::update(double dt) {
 	if (auto pl = _player.lock()) {
 		if (length(pl->getPosition() - _parent->getPosition()) < 600.0)
 			_firetime -= dt;
+			
 	}
 
   if (_firetime <= 0.f) {
     fire();
     _firetime = 3.f;
   }
-  static float angle = 0.f;
-  angle += 1.f * dt;
+  //static float angle = 0.f;
+  //angle += 1.f * dt;
 
-  _parent->setRotation(180.f + sin(angle) * 45.f);
+  //_parent->setRotation(180.f + sin(angle) * 45.f);
 }
 
 void EnemyTurretComponent::fire() const {
@@ -62,4 +63,6 @@ void EnemyTurretComponent::fire() const {
 void EnemyTurretComponent::setSpeed(float& speed) { _speed = speed; }
 
 EnemyTurretComponent::EnemyTurretComponent(Entity* p)
-    : Component(p), _firetime(3.f) , _player(_parent->scene->ents.find("player")[0]), _speed(15.0f){}
+    : Component(p), _firetime(3.f) , _player(_parent->scene->ents.find("player")[0]), _speed(05.0f){
+	
+}

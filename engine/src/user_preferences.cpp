@@ -5,7 +5,7 @@ using namespace sf;
 using namespace std;
 
 UserPreferences::UserPreferences() :
-	fullscreen(7), video_resolution(Vector2f(800,600)){
+	fullscreen(7), video_resolution(Vector2f(800,600)), changed_fullscreen(false), changed_resolution(false){
 	
 } //7 default; 8 fullscreen
 

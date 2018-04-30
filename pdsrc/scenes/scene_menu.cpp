@@ -13,7 +13,7 @@ using namespace std;
 using namespace sf;
 
 void MenuScene::Load() {
-	if (!this->theme.openFromFile("res/musics/menuTheme.ogg"))
+	if (!this->theme.openFromFile("res/audio/Interlude_Boss.ogg"))
 		cout << "Error: we not found music file";
 	this->theme.setLoop(true);
 	this->theme.setVolume(75);
@@ -28,7 +28,7 @@ void MenuScene::Load() {
 	a1.setSpriteSheet(*(cmp->addTexture(p)));
 	cmp->addFrames(a1, 37, 4, 1000.0f, 410.0f, 0.0f);
 	AnimatedSprite b(sf::seconds(0.20f), true, true);
-	b.setOrigin(Engine::getWindowSize().x, Engine::getWindowSize().y);
+	b.setOrigin(Engine::getWindowSize().x/2, Engine::getWindowSize().y/2);
 	b.setPosition(Vector2f(Engine::getWindowSize().x/2, Engine::getWindowSize().y/2));
 	cmp->setSprite(b);
 	cmp->getSprite().setAnimation(a1);

@@ -7,9 +7,9 @@ using namespace sf;
 
 void HurtComponent::update(double dt) {
   if (auto pl = _player.lock()) {
-	if (length(pl->getPosition() - _parent->getPosition()) < 90.0) {
+	if (length(pl->getPosition() - _parent->getPosition()) < 85.0) {
       pl->get_components<LifeComponent>()[0]->reduceLives();
-	  
+	  //_parent->setVisible(false);
       //_parent->setForDelete();
     }
   }
