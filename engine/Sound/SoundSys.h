@@ -9,14 +9,14 @@ typedef struct
 	std::string name;
 }sbuffer;
 
-static class Sound
+static class SoundSys
 {
 private:
 	std::vector<sbuffer>ListOfSongs;
 	std::vector<sbuffer>ListOfSfx;
 public:
-	Sound() {}
-	Sound(std::string filename);
+	SoundSys() {}
+	SoundSys(std::string filename);
 
 	void SetMusicBuffer(std::string filename);
 
@@ -28,5 +28,5 @@ public:
 
 	std::vector<sbuffer>* reSound();
 
-	~Sound() {}
+	~SoundSys() {}
 };

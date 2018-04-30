@@ -9,5 +9,5 @@
 class Factory
 {
 public:
-	static std::shared_ptr<Sound> CreateSound();
+	static std::shared_ptr<SoundSys> CreateSound();
 };
