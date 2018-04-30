@@ -97,7 +97,7 @@ void MenuScene::Update(const double& dt) {
 		  //Engine::ChangeScene(&shop);
 	  }
 	  else if (ents.find("pointer")[0]->getPosition() == posMenuItems[2] - Vector2f(20.f, -20.f)) {//options
-		  //Engine::GetWindow().close();
+		  Engine::ChangeScene(&optionScene);
 	  }
 	  else if (ents.find("pointer")[0]->getPosition() == posMenuItems[3] - Vector2f(20.f, -20.f)) {//exit
 		  Engine::GetWindow().close();
@@ -121,7 +121,9 @@ void MenuScene::Update(const double& dt) {
 		  
 	  }
   }
-
+  if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+	  Engine::GetWindow().close();
+  }
 
   Scene::Update(dt);
 }

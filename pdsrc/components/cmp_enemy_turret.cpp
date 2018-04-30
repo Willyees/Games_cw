@@ -44,19 +44,13 @@ void EnemyTurretComponent::fire() const {
 	s->addSprite("idle", as, a);
 
 	
-	/*auto s = bullet->addComponent<ShapeComponent>();
-	s->setShape<sf::CircleShape>(8.f);
-	s->getShape().setFillColor(Color::Red);
-	*/
 	auto p = bullet->addComponent<PhysicsComponent>(true, Vector2f(50.f, 44.75f));
 	p->setRestitution(0.0f);
 	p->setFriction(.005f);
 	p->setMass(0.005);
 	
 	if (auto pl = _player.lock()) {
-		//p->impulse(Vector2f(-50.0f, 25.0f));
-		/*p->impulse(sf::rotate(Vector2f(0, 15.f), -_parent->getRotation()));*/
-		//improve using center of entity
+				
 		Vector2f direction(pl->getPosition().x - _parent->getPosition().x, pl->getPosition().y - _parent->getPosition().y);
 		cout << direction << endl;
 		float length_vector = sqrt(pow(direction.x, 2) + pow(direction.y, 2));

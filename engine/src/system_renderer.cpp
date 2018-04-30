@@ -30,8 +30,9 @@ void Renderer::render() {
     throw("No render window set! ");
   }
   //set view size in case window size has been changed
+  Engine::GetWindow().setSize(Vector2u(Engine::user_preferences.video_resolution));
   view.setSize(Vector2f(Engine::getWindowSize()));
-
+  
   Vector2f view_temp_center = view.getCenter();
   view.setCenter(Vector2f(Engine::getWindowSize().x / 2, Engine::getWindowSize().y / 2));
   rw->setView(view);

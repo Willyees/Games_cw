@@ -27,7 +27,7 @@ public:
   std::shared_ptr<Entity> makeEntity(bool dynamic);
   
   EntityManager ents;
-  
+  sf::Vector2f mouse_pos;
 protected:
 	int scorePoints;
 	std::shared_ptr<sf::Sprite> _background;
@@ -38,6 +38,7 @@ private:
   mutable std::future<void> _loaded_future;
   mutable std::mutex _loaded_mtx;
   bool _backgroundBool;
+  
 };
 
 class Engine {

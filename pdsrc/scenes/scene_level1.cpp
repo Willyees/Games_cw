@@ -450,6 +450,9 @@ void Level1Scene::Update(const double& dt) {
   
   Renderer::view.setCenter(player->getPosition().x, player->getPosition().y);
   
+  if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+	  Engine::ChangeScene(&menu);
+  }
   Scene::Update(dt);
   
 }
