@@ -8,6 +8,7 @@
 #include "../components/cmp_hurt_player.h"
 #include "../components/cmp_powerup.h"
 #include "../components/cmp_get_hurt_by_player.h"
+#include "../components/cmp_change_state_close_player.h"
 #include "../game.h"
 #include <LevelSystem.h>
 #include <iostream>
@@ -276,7 +277,7 @@ void Level1Scene::Load() {
 			auto m = makeEntity(true);
 			m->setPosition(pos);
 			auto s = m->addComponent<SpriteComponentAnimated>();
-
+			
 			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 171.0f));
 			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 203.0f));
 			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 244.0f));
@@ -285,13 +286,22 @@ void Level1Scene::Load() {
 			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 284.0f));
 			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 336.0f));
 			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 372.0f));
+
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 336.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 284.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 263.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 263.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 244.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 203.0f));
+			a.addFrame(IntRect(0.0f, 0.0f, 22.0f, 171.0f));
 			/*s->addFrames(a, 11, 5, 179.0f, 435.0f, 0.0f);*/
-			AnimatedSprite b(sf::seconds(0.15f), true, true);
+			AnimatedSprite b(sf::seconds(0.25f), true, true);
 			//b.setOrigin(89.5f, 217.5f);//needs to set origin because physics create box using center origin
 			a.setSpriteSheet(*(s->addTexture(chain)));
 			s->addSprite("idle", b, a);
 			m->entityType = EntityType::ENEMY;
 			//enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(270.0f, 270.0f));
+			m->addComponent<ChangeStateClosePlayerComponent>();
 
 			//masherbottom
 			Texture p;
@@ -303,6 +313,7 @@ void Level1Scene::Load() {
 			s1->getSprite().setOrigin(Vector2f(63.0f, 0.0f));
 			masher_bottom->addComponent<FollowPosComponent>(&(*m));
 			masher_bottom->addComponent<HurtComponent>();
+			
 		}
 		
 
@@ -537,7 +548,7 @@ void Level1Scene::Update(const double& dt) {
 	  cout << "yes they are !" << endl;
   }*/
   //not the cleanest way to update the score points
-  if (!player->isAlive()) {
+  if (!player->isAlive() || Keyboard::isKeyPressed(Keyboard::Num4)) {
 	  //change scene and unload everything
 	  Engine::ChangeScene((Scene*)&gameOver);
 	  return;
@@ -548,7 +559,7 @@ void Level1Scene::Update(const double& dt) {
   
 
   if (Keyboard::isKeyPressed(Keyboard::Escape)) {
-	  Engine::ChangeScene(&menu);
+	  Engine::ChangeScene((Scene*)&menu);
   }
 
   if( !_paused )

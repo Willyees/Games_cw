@@ -1,6 +1,5 @@
 #include "cmp_get_hurt_by_player.h"
 #include <engine.h>
-#include <iostream>
 
 using namespace std;
 

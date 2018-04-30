@@ -5,10 +5,11 @@
 #include <iostream>
 #include "scene_menu.h"
 #include "system_renderer.h"
+#include "../game.h"
 
 using namespace std;
 using namespace sf;
-MenuScene menu1;
+
 
 void GameOverScene::Load()
 {
@@ -17,8 +18,7 @@ void GameOverScene::Load()
 	{
 		auto text_game = makeEntity(false);
 		text_game->addComponent<TextComponent>("GAME OVER!");
-		Engine::Start(1200, 800, "TRY AGAIN?", &menu1);
-
+		
 	}
 	setLoaded(true);
 }
@@ -30,6 +30,11 @@ void GameOverScene::UnLoad()
 
 void GameOverScene::Update(const double & dt)
 {
+	float timer = 0;
+	timer += dt;
+	if(timer > 3.0f) 
+		Engine::ChangeScene((Scene*)&menu);
+
 	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 		Engine::GetWindow().close();
 	}
