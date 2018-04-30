@@ -32,12 +32,12 @@ static shared_ptr<Entity> enemy_temp;
 void Level1Scene::UnlockNextScene() { _nextSceneUnlocked = true; }
 
 void Level1Scene::Load() {
-	/*menu.theme.stop();
-	if (!this->theme.openFromFile("res/musics/Vidian_-_aether_theories_1.ogg"))
+	menu.theme.stop();
+	if (!this->theme.openFromFile("res/audio/Interlude_Silly.ogg"))
 		cout << "Error: we not found music file";
 	this->theme.setLoop(true);
 	this->theme.setVolume(75);
-	this->theme.play();*/
+	this->theme.play();
 
   cout << " Scene 1 Load" << endl;
   ls::loadLevelFileJson("res/levels/Map.json");

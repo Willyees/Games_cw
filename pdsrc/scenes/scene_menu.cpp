@@ -13,7 +13,7 @@ using namespace std;
 using namespace sf;
 
 void MenuScene::Load() {
-	if (!this->theme.openFromFile("res/musics/menuTheme.ogg"))
+	if (!this->theme.openFromFile("res/audio/Interlude_Boss.ogg"))
 		cout << "Error: we not found music file";
 	this->theme.setLoop(true);
 	this->theme.setVolume(75);
