@@ -7,6 +7,10 @@ class Level1Scene : public Scene {
 	sf::SoundBuffer themebuff;
 	sf::Sound theme;
 
+	sf::Texture _backtex;
+	sf::Sprite _backsprite;
+	sf::IntRect _backrect;
+
 public:
 
   void Load() override;

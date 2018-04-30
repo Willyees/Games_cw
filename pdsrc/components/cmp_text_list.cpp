@@ -4,7 +4,7 @@
 #include <system_renderer.h>
 #include <system_resources.h>
 #include <windows.system.diagnostics.h>
-
+#include <iostream>
 using namespace std;
 using namespace sf;
 
@@ -50,4 +50,15 @@ void TextComponentList::addText(std::string& str)
 sf::Text TextComponentList::getText()
 {
 	return _text;
+}
+
+void TextComponentList::setDefault(std::string str)
+{
+	for (int i = 0; i < _text_list.size(); i++) {
+		cout << (string)_text_list.at(i).getString() << endl;
+		if (_text_list.at(i).getString() == (String) str) {
+			_text_list_index = i;
+			_text = _text_list.at(_text_list_index);
+		}
+	}
 }

@@ -35,6 +35,7 @@ void OptionScene::Load()
 	resolution = makeEntity(false);
 	vector<string> textlist1{ "800 x 600", "1000 x 800", "1024 x 800", "1280 x 1024", "1360 x 768", "1600 x 900", "1920 x 1080" };
 	auto t2 = resolution->addComponent<TextComponentList>(textlist1);
+	t2->setDefault(to_string(static_cast<int>(Engine::user_preferences.video_resolution.x)) + " x " + to_string(static_cast<int>(Engine::user_preferences.video_resolution.y)));
 	resolution->setPosition(Vector2f(600.0f, 200.0f));
 
 
@@ -47,8 +48,19 @@ void OptionScene::Load()
 	fullscreen = makeEntity(false);
 	vector<string> textlist{ "ON", "OFF" };
 	auto t1 = fullscreen->addComponent<TextComponentList>(textlist);
+	if (Engine::user_preferences.fullscreen == 7)
+		t1->setDefault("OFF");
+	else
+		t1->setDefault("ON");
 	fullscreen->setPosition(Vector2f(600.0f, 300.0f));
 	
+	Texture z;
+	z.loadFromFile("res/images/ezgif.com-gif-maker640widthtransparent2.png");
+	shared_ptr<Entity> k = makeEntity(false);
+	k->setPosition(Vector2f(200.0f,200.0f));
+	auto d = k->addComponent<SpriteComponent>();
+	d->setSprite(Sprite(*(d->setTexture(z)), IntRect(0, 0, 640, 480)));
+	//d->getSprite().setOrigin(Vector2f(25.0f, 25.0f));
 	setLoaded(true);
 }
 
@@ -65,10 +77,24 @@ void OptionScene::Update(const double & dt)
 		stringstream(text.substr(index + 1)) >> i2;
 		
 		Engine::user_preferences.video_resolution = Vector2f(i1, i2);
+		Engine::user_preferences.changed_resolution = true;
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 		Engine::ChangeScene((Scene*)&menu);
+	}
+	
+	if(fullscreen->get_components<TextComponentList>()[0]->changed){
+		Engine::user_preferences.changed_fullscreen = true;
+		if (fullscreen->get_components<TextComponentList>()[0]->getText().getString() == "ON") {
+			Engine::user_preferences.fullscreen = 8;
+			cout << "ON" << endl;
+		}
+		else {//must be "OFF" then
+			cout << "OFF" << endl;
+			Engine::user_preferences.fullscreen = 7;
+			  
+		}
 	}
 	Scene::Update(dt);
 }
