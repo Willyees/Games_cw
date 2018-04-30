@@ -29,9 +29,12 @@ void LevelSystem::loadLevelFileJson(const std::string & path)
 	_height = helper->_json.rows_map;
 
 	_texture.loadFromFile(helper->_json.texture);
-	vector<TILES> temp_tiles = *(helper->createTileList());
+	vector<TILES> temp_tiles = helper->createTileList();
 	
-	_tiles = std::make_unique<TILES[]>(helper->_json.columns_map * helper->_json.rows_map);
+	size_t tile_count = helper->_json.columns_map * helper->_json.rows_map;
+	_tiles = std::make_unique<TILES[]>( tile_count );
+
+	assert( tile_count == temp_tiles.size() );
 	
 	std::copy(temp_tiles.begin(), temp_tiles.end(), &_tiles[0]);
 	/*for (int i = 0; i < 400; i++) {
@@ -316,7 +319,7 @@ json& jsonHelper::getJson(std::string path)
 	_json.tileWidth_map = d["tilewidth"].GetFloat();
 	_json.tileHeight_map = d["tileheight"].GetFloat();
 
-
+	_json.data.clear();
 	for (auto& item : d["layers"][0]["data"].GetArray()) {
 		_json.data.push_back(item.GetInt());
 	}
@@ -349,9 +352,9 @@ sf::IntRect jsonHelper::getIntRect(size_t gid)
 	return IntRect(pos_in_texture.x, pos_in_texture.y, _json.tileWidth_tileset, _json.tileHeight_tileset);
 }
 
-std::shared_ptr<vector<ls::TILES>> jsonHelper::createTileList()
+vector<ls::TILES> jsonHelper::createTileList()
 {
-	shared_ptr<vector<ls::TILES>> _tiles = make_shared<vector<ls::TILES>>();
+	vector<ls::TILES> tiles;
 	vector<vector<int>> keys;
 	
 	//int c = 1;
@@ -360,7 +363,7 @@ std::shared_ptr<vector<ls::TILES>> jsonHelper::createTileList()
 			for (auto& item: limitsElementsTexture) {
 				if (gid >= item.limits[0] && gid <= item.limits[1])
 				{
-					_tiles->push_back(item.types);
+					tiles.push_back(item.types);
 					break;
 				}
 				//used to check which gid was not set (had not a key which matches)
@@ -374,10 +377,10 @@ std::shared_ptr<vector<ls::TILES>> jsonHelper::createTileList()
 		
 	}
 
-	if (_tiles->size() != _json.data.size())
+	if (tiles.size() != _json.data.size())
 		throw string("The TILES[] created size is different from the data read in the json file! Uncomment to discover which gid has not been set");
 
-	return _tiles;
+	return tiles;
 }
 
 sf::Vector2f jsonHelper::getPosTileinMap(int pos)

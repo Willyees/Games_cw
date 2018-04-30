@@ -134,5 +134,5 @@ public:
 	size_t getGidAtPos(sf::Vector2f);
 	sf::Vector2f getPosTileinMap(int pos);
 	json& getJson(std::string path);
-	std::shared_ptr<std::vector<ls::TILES>> createTileList();
+	std::vector<ls::TILES> createTileList();
 };

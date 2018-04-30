@@ -13,6 +13,7 @@
 #include <iostream>
 #include <thread>
 #include <SFML\Graphics\View.hpp>
+#include <SFML\Graphics.hpp>
 #include <SFML\Audio\Music.hpp>
 #include "system_renderer.h"
 #include "system_physics.h"
@@ -393,6 +394,39 @@ void Level1Scene::Load() {
 		  k->addComponent<GetHurtByPlayerComponent>();
 		  //add component which will set scene _nextSceneUnlocked to true when destroyed or touched
 	  }
+  }
+
+  {
+	  // Pause menu.
+	  _paused = false;
+	  _pausetex.loadFromFile( "res/images/pause.png" );
+	  _playtex.loadFromFile( "res/images/play.png" );
+	  _pausesprite.setTexture( _pausetex );
+
+	  const int border = 15;
+	  const int size = 100;
+	  _pauserect.left = border;
+	  _pauserect.top = border;
+	  _pauserect.height = size;
+	  _pauserect.width = size;
+
+	  // Reset button.
+	  _resettex.loadFromFile( "res/images/restart.png" );
+	  _resetsprite.setTexture( _resettex );
+	  
+	  _resetrect.left = border + size + border;
+	  _resetrect.top = border;
+	  _resetrect.height = size;
+	  _resetrect.width = size;
+
+	  // Back to menu button.
+	  _backtex.loadFromFile( "res/images/back.png" );
+	  _backsprite.setTexture( _backtex );
+
+	  _backrect.left = border + size + border + size + border;
+	  _backrect.top = border;
+	  _backrect.height = size;
+	  _backrect.width = size;
 
   }
 
@@ -413,7 +447,41 @@ void Level1Scene::UnLoad() {
 }
 
 void Level1Scene::Update(const double& dt) {
-	
+	// Use this to force player to let go of button before the button effect kicks in again.
+	static bool mouse_released = true; 
+	// Check if pause button was pressed.
+	if(Mouse::isButtonPressed( Mouse::Left ) )
+	{
+		if( mouse_released )
+		{
+			Vector2i mpos = Mouse::getPosition( Engine::GetWindow() );
+			if( _pauserect.contains( mpos ) )
+			{
+				_paused = !_paused;
+				Engine::setPhysicsPause( _paused );
+				if( _paused )
+					_pausesprite.setTexture( _playtex, true );
+				else _pausesprite.setTexture( _pausetex, true );
+
+			}
+
+			if( _resetrect.contains( mpos ) )
+			{
+				// Restart game.
+				Engine::ChangeScene( &level1 );
+				return;
+			}
+
+			if( _backrect.contains( mpos ) )
+			{
+				Engine::ChangeScene( &menu );
+				return;
+			}
+
+			mouse_released = false;
+		}
+	}
+	else { mouse_released = true; }
 	
   if (ls::getTileAt(player->getPosition()) == ls::PORTAL && _nextSceneUnlocked == true) {
 	 
@@ -449,20 +517,57 @@ void Level1Scene::Update(const double& dt) {
   
   Renderer::view.setCenter(player->getPosition().x, player->getPosition().y);
   
+
   if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 	  Engine::ChangeScene(&menu);
   }
-  Scene::Update(dt);
+
+  if( !_paused )
+  {
+	Scene::Update( dt );
+  }
   
 }
 
+// Small helper that scales and moves a sprite to a target rectangle and renders it to screen.
+void drawSpriteTo( sf::RenderWindow* window, Sprite* sprite, IntRect target )
+{
+	Vector2f sourceSize = Vector2f( sprite->getTexture()->getSize() );
+	Vector2f scale = Vector2f( target.width / sourceSize.x, target.height / sourceSize.y );
+	sprite->setPosition( Vector2f( target.left + target.width, target.top + target.height * 2 ) );
+	sprite->setScale( scale );
+	window->draw( *sprite );
+}
+
 void Level1Scene::Render() {
+
+  auto& window = Engine::GetWindow();
+
   if (_background != nullptr) {
-	  Engine::GetWindow().draw(*_background);
+	  window.draw(*_background);
   }
+
   Scene::Render();
-  ls::render(Engine::GetWindow());
-  
+  ls::render( window );
+
+
+  // Keep game view to be restored
+  auto oldview = window.getView();
+
+  // Setup a separate view for GUI rendering.
+  // This makes sure that the GUI positions are not in world position but relative to
+  // The corner of the screen.
+  sf::View GUIView;
+  GUIView.setSize( Vector2f( window.getSize() ) );
+  window.setView( GUIView );
+
+  // Render GUI buttons.
+  drawSpriteTo( &window, &_pausesprite, _pauserect );
+  drawSpriteTo( &window, &_resetsprite, _resetrect );
+  drawSpriteTo( &window, &_backsprite, _backrect );
+
+  // Restore game view after rendering GUI.
+  window.setView( oldview );
 }
 
 void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
