@@ -11,6 +11,7 @@ void HurtComponent::update(double dt) {
       pl->get_components<LifeComponent>()[0]->reduceLives();
 	  //_parent->setVisible(false);
       //_parent->setForDelete();
+
     }
   }
 }

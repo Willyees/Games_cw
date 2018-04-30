@@ -173,6 +173,7 @@ void Level1Scene::Load() {
 		  
 		  coin_temp->entityType = EntityType::COIN;
 		  coin_temp->addComponent<GetHurtByPlayerComponent>();
+		  
 		  //auto phy = coin_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f,40.0f));
 		  //phy->setRestitution(0.0f);
 	  }
@@ -206,6 +207,11 @@ void Level1Scene::Load() {
 		  auto phy = oil_temp->addComponent<PhysicsComponent>(false, Vector2f(50.0f, 50.0f));
 		  oil_temp->addComponent<HurtComponent>();
 		  phy->setRestitution(0.0f);
+		  if (!this->theme.openFromFile("res/audio/oil.mp3"))
+			  cout << "Error: we not found music file";
+		  this->theme.setLoop(true);
+		  this->theme.setVolume(75);
+		  this->theme.play();
 	  }
   }
   // Add Fertilizer
@@ -369,9 +375,9 @@ void Level1Scene::Load() {
 	  
 	  Animation a;
 	  
-	  auto enemies = ls::findTiles(ls::ENEMY);
-	 auto e = enemies[1];
-	 //for (auto e : enemies) {
+	 auto enemies = ls::findTiles(ls::ENEMY);
+	 //auto e = enemies[1];
+	 for (auto e : enemies) {
 		  Vector2f pos = ls::getTilePosition(e);
 		  pos += Vector2f(25.0f, 25.0f);
 		  enemy_temp = makeEntity(true);
@@ -386,7 +392,7 @@ void Level1Scene::Load() {
 		  enemy_temp->entityType = EntityType::ENEMY;
 		  //enemy_temp->addComponent<PhysicsComponent>(false, Vector2f(60.0f, 30.0f));
 		  enemy_temp->addComponent<EnemyTurretComponent>();
-	  //}
+	  }
 		  
   }
   //TODO: find key sprite and fix all the sizes.
