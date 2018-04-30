@@ -249,6 +249,6 @@ long long last() {
 } // namespace timing
 
 Scene::~Scene() { UnLoad(); }
-Scene::Scene() : scorePoints(0) {}
+Scene::Scene() : scorePoints(0), _loaded( false ) {}
 
 

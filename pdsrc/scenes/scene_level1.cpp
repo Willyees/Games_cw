@@ -453,6 +453,7 @@ void Level1Scene::Update(const double& dt) {
 			if( _resetrect.contains( mpos ) )
 			{
 				// Restart game.
+				Engine::ChangeScene( &level1 );
 			}
 
 			mouse_released = false;
