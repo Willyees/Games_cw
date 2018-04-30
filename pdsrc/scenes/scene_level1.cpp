@@ -354,7 +354,7 @@ void Level1Scene::Load() {
 	  auto life = makeEntity(false);
 	  life->entityType = EntityType::LIFE;
 	  life->addTag("life");
-	  life->setPosition(Vector2f(Engine::getWindowSize().x - 200, 80));
+	  life->setPosition(Vector2f(Engine::getWindowSize().x - 600, 80));
 	  auto s = life->addComponent<SpriteComponentRepeted>(player->get_components<LifeComponent>()[0]->getLives());
 	  s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 100, 80)));//adding texture internally and giving it to the animation as well
 	  AnimatedSprite b(sf::seconds(0.1f), true, true);
