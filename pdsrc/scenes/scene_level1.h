@@ -2,11 +2,19 @@
 
 #include "engine.h"
 #include <SFML\Audio\Music.hpp>
+#include <SFML\Graphics\View.hpp>
 
 class Level1Scene : public Scene {
 private:
 	sf::Music theme;
 	bool _nextSceneUnlocked = false;
+
+	bool _paused = false;
+	sf::Texture _pausetex;
+	sf::Texture _playtex;
+	sf::Sprite _pausesprite;
+	sf::IntRect _pauserect;
+
 public:
   void UnlockNextScene();
   void Load() override;

@@ -13,6 +13,7 @@
 #include <iostream>
 #include <thread>
 #include <SFML\Graphics\View.hpp>
+#include <SFML\Graphics.hpp>
 #include <SFML\Audio\Music.hpp>
 #include "system_renderer.h"
 #include "system_physics.h"
@@ -394,7 +395,19 @@ void Level1Scene::Load() {
 		  k->addComponent<GetHurtByPlayerComponent>();
 		  //add component which will set scene _nextSceneUnlocked to true when destroyed or touched
 	  }
+  }
 
+  {
+	// Pause menu.
+	  _pausetex.loadFromFile( "res/images/pause.png" );
+	  _playtex.loadFromFile( "res/images/play.png" );
+
+	  const int border = 15;
+	  const int size = 100;
+	  _pauserect.left = border;
+	  _pauserect.top = border;
+	  _pauserect.height = size;
+	  _pauserect.width = size;
   }
 
   //Simulate long loading times
@@ -414,7 +427,22 @@ void Level1Scene::UnLoad() {
 }
 
 void Level1Scene::Update(const double& dt) {
-	
+	// Use this to force player to let go of button before the button effect kicks in again.
+	static bool mouse_released = true; 
+	// Check if pause button was pressed.
+	if(Mouse::isButtonPressed( Mouse::Left ) )
+	{
+		if( mouse_released )
+		{
+			Vector2i mpos = Mouse::getPosition( Engine::GetWindow() );
+			if( _pauserect.contains( mpos ) )
+			{
+				_paused = !_paused;
+			}
+			mouse_released = false;
+		}
+	}
+	else { mouse_released = true; }
 	
   if (ls::getTileAt(player->getPosition()) == ls::PORTAL && _nextSceneUnlocked == true) {
 	 
@@ -450,7 +478,10 @@ void Level1Scene::Update(const double& dt) {
   
   Renderer::view.setCenter(player->getPosition().x, player->getPosition().y);
   
-  Scene::Update(dt);
+  if( !_paused )
+  {
+	  Scene::Update( dt );
+  }
   
 }
 
@@ -458,8 +489,31 @@ void Level1Scene::Render() {
   if (_background != nullptr) {
 	  Engine::GetWindow().draw(*_background);
   }
+
+  auto& window = Engine::GetWindow();
+
+  // Keep game view to be restored
+  auto oldview = window.getView();
+
+  // Setup a separate view for GUI rendering.
+  sf::View GUIView;
+  GUIView.setSize( Vector2f( window.getSize() ) );
+  window.setView( GUIView );
+  if( _paused )
+	  _pausesprite.setTexture( _playtex );
+  else _pausesprite.setTexture( _pausetex );
+  Vector2f pauseSourceSize = Vector2f( _pausetex.getSize() );
+  Vector2f pauseTargetSize = Vector2f( _pauserect.width, _pauserect.height );
+  Vector2f pausescale = Vector2f( pauseTargetSize.x / pauseSourceSize.x, pauseTargetSize.y / pauseSourceSize.y );
+  _pausesprite.setPosition( Vector2f( _pauserect.left - _pauserect.width, _pauserect.top + _pauserect.height ) );
+  _pausesprite.setScale( pausescale );
+  window.draw( _pausesprite );
+
+  // Restore game view after rendering GUI.
+  window.setView( oldview );
+
   Scene::Render();
-  ls::render(Engine::GetWindow());
+  ls::render( window );
   
 }
 
