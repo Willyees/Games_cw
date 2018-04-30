@@ -51,12 +51,15 @@ public:
   static sf::Vector2u getWindowSize();
   static void setVsync(bool b);
   static Scene* getActiveScene();
+  static void setPhysicsPause( bool paused );
   static UserPreferences user_preferences;
 private:
   static Scene* _activeScene;
   static std::string _gameName;
+  static bool _physicsPaused;
   static void Update();
   static void Render(sf::RenderWindow& window);
+
 };
 
 

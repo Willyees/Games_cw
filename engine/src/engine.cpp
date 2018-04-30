@@ -15,6 +15,7 @@ Scene* Engine::_activeScene = nullptr;
 std::string Engine::_gameName;
 sf::View Renderer::view;
 UserPreferences Engine::user_preferences;
+bool Engine::_physicsPaused = false;
 
 static bool loading = false;
 static float loadingspinner = 0.f;
@@ -68,7 +69,10 @@ void Engine::Update() {
   if (loading) {
     Loading_update(dt, _activeScene);
   } else if (_activeScene != nullptr) {
-    Physics::update(dt);
+	  if( !_physicsPaused )
+	  {
+		  Physics::update( dt );
+	  }
     _activeScene->Update(dt);
   }
 }
@@ -118,6 +122,11 @@ void Engine::Start(unsigned int width, unsigned int height,
   Renderer::shutdown();
 }
 
+void Engine::setPhysicsPause( bool pause )
+{
+	_physicsPaused = pause;
+}
+
 std::shared_ptr<Entity> Scene::makeEntity(bool dynamic) {
   auto e = make_shared<Entity>(this, dynamic);
  
@@ -135,6 +144,10 @@ Scene * Engine::getActiveScene()
 
 void Engine::ChangeScene(Scene* s) {
   cout << "Eng: changing scene: " << s << endl;
+
+  // Force physics unpause when scene is changed, since new scene doesn't know if it is paused or not.
+  _physicsPaused = false;
+  
   auto old = _activeScene;
   _activeScene = s;
 
@@ -158,7 +171,6 @@ void Scene::Update(const double& dt) {
 void Scene::Render() { 
 	
 	ents.render(); 
-	
 }
 
 void Scene::collisionHandler(Entity * entityA, Entity * entityB){}

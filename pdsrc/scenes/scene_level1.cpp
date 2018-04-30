@@ -447,6 +447,7 @@ void Level1Scene::Update(const double& dt) {
 			if( _pauserect.contains( mpos ) )
 			{
 				_paused = !_paused;
+				Engine::setPhysicsPause( _paused );
 			}
 
 			if( _resetrect.contains( mpos ) )
