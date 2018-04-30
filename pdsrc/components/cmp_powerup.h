@@ -12,6 +12,6 @@ protected:
 public:
 	void update(double dt) override;
 	void render() override {}
-	explicit PowerUpComponent(Entity* p, float jumptime = 3.f);
+	explicit PowerUpComponent(Entity* p, float jumptime = 4.f);
 	PowerUpComponent() = delete;
 };

@@ -14,7 +14,7 @@ void PowerUpComponent::update(double dt) {
 			cout << jumptime << endl;
 			if (jumptime <= 0.f) {
 				//woudl be better to preload it during loading screen and then assign it when needed
-				pl->get_components<PlayerPhysicsComponent>()[0]->setImpStrenght(-8.5f);
+				pl->get_components<PlayerPhysicsComponent>()[0]->setImpStrenght(-10.f);
 				vector<Texture> temp;
 				Texture p;
 				p.loadFromFile("res/images/player_sprites/walk_right.png");
@@ -48,7 +48,6 @@ void PowerUpComponent::update(double dt) {
 			p.loadFromFile("res/images/player_sprites2/sjumpL.png");
 			temp.push_back(p);
 			p.loadFromFile("res/images/player_sprites2/sjumpR.png");
-
 			temp.push_back(p);
 			pl->get_components<SpriteComponentAnimated>()[0]->swapTextures(temp);
 			

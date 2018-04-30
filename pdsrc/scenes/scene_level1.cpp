@@ -333,14 +333,14 @@ void Level1Scene::Load() {
 	  phy->setRestitution(0.0f);
     }
   }
-  //add physics colliders invisible walls
+  // Add physics colliders to level tiles.
   {
 	  auto walls = ls::findTiles(ls::INVISWALL);
 	  for (auto w : walls) {
 		  auto pos = ls::getTilePosition(w);
 		  pos += Vector2f(25.f, 25.f); //offset to center
 		  auto e = makeEntity(true);
-		  e->entityType = EntityType::WALL;
+		  e->entityType = EntityType::INVISWALL;
 		  e->setPosition(pos);
 		  auto phy = e->addComponent<PhysicsComponent>(false, Vector2f(50.f, 50.f));
 		  phy->setRestitution(0.0f);
@@ -350,14 +350,14 @@ void Level1Scene::Load() {
   {
 	  Texture p;
 	  p.loadFromFile("res/images/heart.png");
-	 
+	  Animation a;
 	  auto life = makeEntity(false);
 	  life->entityType = EntityType::LIFE;
 	  life->addTag("life");
 	  life->setPosition(Vector2f(Engine::getWindowSize().x - 200, 80));
 	  auto s = life->addComponent<SpriteComponentRepeted>(player->get_components<LifeComponent>()[0]->getLives());
-	  s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 16, 16)));
-
+	  s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 100, 80)));//adding texture internally and giving it to the animation as well
+	  AnimatedSprite b(sf::seconds(0.1f), true, true);
   }
 
   //Enemy
@@ -404,6 +404,21 @@ void Level1Scene::Load() {
 		  s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 50, 50)));
 		  s->getSprite().setOrigin(Vector2f(25.0f, 25.0f));
 		  k->addComponent<GetHurtByPlayerComponent>();
+		  //add component which will set scene _nextSceneUnlocked to true when destroyed or touched
+	  }
+  }
+  {
+	  Texture p;
+	  p.loadFromFile("res/images/portal.png");
+	  auto keys = ls::findTiles(ls::PORTAL);
+	  for (auto k : keys) {
+		  Vector2f pos = ls::getTilePosition(k);
+		  pos += Vector2f(25.0f, 25.0f);
+		  shared_ptr<Entity> k = makeEntity(true);
+		  k->setPosition(pos);
+		  auto s = k->addComponent<SpriteComponent>();
+		  s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 50, 50)));
+		  s->getSprite().setOrigin(Vector2f(25.0f, 25.0f));
 		  //add component which will set scene _nextSceneUnlocked to true when destroyed or touched
 	  }
   }
@@ -617,6 +632,17 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 {
 	switch (entityA->entityType)
 	{
+	case EntityType::INVISWALL:
+		switch (entityB->entityType)
+		{
+		case EntityType::PLAYER:
+			entityB->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
+		default:
+			break;
+		}
+		break;
+	
+
 	case EntityType::COIN:
 		switch (entityB->entityType)
 		{
@@ -660,7 +686,6 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 				break;
 		}
 		break;
-		
 	case EntityType::BULLET:
 		switch (entityA->entityType)
 		{

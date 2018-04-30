@@ -48,7 +48,7 @@ void MenuScene::Load() {
         "Potato's Destiny");
 	auto newGame = makeEntity(false);
 	t = newGame->addComponent<TextComponent>(
-		"New Game");
+		"Play Now");
 	auto shop = makeEntity(false);
 	t = shop->addComponent<TextComponent>(
 		"Shop");

@@ -48,7 +48,8 @@ public:
 	OIL,
 	PORTAL,
 	UNKNOWN,
-	INVISWALL
+	INVISWALL,
+
   };
 
   static TILES getTile(sf::Vector2ul);
@@ -114,6 +115,7 @@ public:
 	{
 	{limitElementTexture(0,0, ls::EMPTY) },
 	{ limitElementTexture(1,6, ls::WALL) },
+	
 	{limitElementTexture(7,7, ls::START)},
 	{ limitElementTexture(8,8, ls::ENEMY)},
 	{ limitElementTexture(9,9, ls::COIN) },
@@ -123,8 +125,8 @@ public:
 	{limitElementTexture(13,13, ls::KEY)},
 	{ limitElementTexture(14,14, ls::PORTAL) },
 	{ limitElementTexture(15,15, ls::OIL) },
-	{ limitElementTexture(16,16, ls::INVISWALL) },
-
+	{ limitElementTexture(16,16, ls:: INVISWALL) },
+	{ limitElementTexture(17,17, ls::WALL) },
 	//{limitElementTexture(48,48, ls::UNKNOWN)},
 	
 	};

@@ -18,7 +18,12 @@ void GameOverScene::Load()
 	{
 		auto text_game = makeEntity(false);
 		text_game->addComponent<TextComponent>("GAME OVER!");
+<<<<<<< Updated upstream
 		
+=======
+		Engine::Start(1200, 1000, "TRY AGAIN?", &menu1);
+
+>>>>>>> Stashed changes
 	}
 	setLoaded(true);
 }

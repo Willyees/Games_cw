@@ -49,7 +49,8 @@ enum EntityType
 	LIFE,
 	ENEMY,
 	OIL,
-	POWERUP
+	POWERUP,
+	INVISWALL,
 };
 class Entity {
   friend struct EntityManager;
