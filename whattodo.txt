@@ -6,16 +6,15 @@ Games Eng CW what to do:
 -add bullet from enemy(modify enemy_ai_cmp)-DONE
 -create map lv1 using tiled -DONE
 -coins are physic structures, when player hit them for a moment will bounce back. Should not do that. -DONE
+-Find sound effects and add them. They should be free and from usable source: they should have a licence to be used freely.(they are listed in the gdd)-DONE
+-add key and check for contact player and key-DONE
+-add textures (chef missing and key)-DONE
+-Graphics options (Resolution & window mode)-DONE
+-Single file .exe game installer/uninstaller-DONE
+-User preference(+savegame where applicable) saving/loading from disk  -DONE
+-Ability to quit to menu, and restart game, pause- DONE
 
--Find sound effects and add them. They should be free and from usable source: they should have a licence to be used freely.(they are listed in the gdd)
--add key and check for contact player and key
--add textures (chef missing and key)
 -remappable controls
--Graphics options (Resolution & window mode)
--Single file .exe game installer/uninstaller
--User preference(+savegame where applicable) saving/loading from disk  (- DONE)
--Ability to quit to menu, and restart game, pause          (- DONE)
-
 
 TO Remember:
 All the external resources needs to be mentioned, so keep the link where you get them (for example: sounds, sprites, etc..)
