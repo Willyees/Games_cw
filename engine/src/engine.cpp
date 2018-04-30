@@ -85,7 +85,7 @@ void Engine::Render(RenderWindow& window) {
 void Engine::Start(unsigned int width, unsigned int height,
                    const std::string& gameName, Scene* scn) {
 	
-  RenderWindow window(VideoMode(width, height), gameName, user_preferences.video_resolution); //to make it full screen
+  RenderWindow window(VideoMode(width, height), gameName, user_preferences.fullscreen); //to make it full screen
   _gameName = gameName;
   _window = &window;
   Renderer::initialise(window);
@@ -93,14 +93,16 @@ void Engine::Start(unsigned int width, unsigned int height,
   ChangeScene(scn);
   while (window.isOpen()) {
     Event event;
-    while (window.pollEvent(event)) {
-      if (event.type == Event::Closed) {
-        window.close();
-      }
-    }
-    if (Keyboard::isKeyPressed(Keyboard::Escape)) {
-      window.close();
-    }
+	_activeScene->mouse_pos = Vector2f(-1.0f, -1.0f);
+	while (window.pollEvent(event)) {
+		if (event.type == Event::Closed) {
+			window.close();
+		}
+		if (event.type == Event::MouseButtonReleased) {
+			_activeScene->mouse_pos = Vector2f(Mouse::getPosition(window));
+		}
+	}
+    
 
     window.clear();
     Update();

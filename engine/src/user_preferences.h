@@ -1,5 +1,5 @@
 #pragma once
-
+#include"SFML\System\Vector2.hpp"
 #include "SFML\Window\WindowStyle.hpp"
 #include "SFML\Window\Keyboard.hpp"
 #include "SFML\Window\Joystick.hpp"
@@ -23,7 +23,8 @@ struct ControllerPreferences
 struct UserPreferences
 {
 public:
-	int video_resolution;
+	sf::Vector2f video_resolution;
+	unsigned int fullscreen;
 	KeyboardPreferences keyboard;
 	ControllerPreferences controller;
 
