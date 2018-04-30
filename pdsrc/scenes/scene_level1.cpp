@@ -491,11 +491,16 @@ void Level1Scene::Update(const double& dt) {
 }
 
 void Level1Scene::Render() {
-  if (_background != nullptr) {
-	  Engine::GetWindow().draw(*_background);
-  }
 
   auto& window = Engine::GetWindow();
+
+  if (_background != nullptr) {
+	  window.draw(*_background);
+  }
+
+  Scene::Render();
+  ls::render( window );
+
 
   // Keep game view to be restored
   auto oldview = window.getView();
@@ -505,21 +510,17 @@ void Level1Scene::Render() {
   GUIView.setSize( Vector2f( window.getSize() ) );
   window.setView( GUIView );
   if( _paused )
-	  _pausesprite.setTexture( _playtex );
-  else _pausesprite.setTexture( _pausetex );
+	  _pausesprite.setTexture( _playtex, true );
+  else _pausesprite.setTexture( _pausetex, true );
   Vector2f pauseSourceSize = Vector2f( _pausetex.getSize() );
   Vector2f pauseTargetSize = Vector2f( _pauserect.width, _pauserect.height );
   Vector2f pausescale = Vector2f( pauseTargetSize.x / pauseSourceSize.x, pauseTargetSize.y / pauseSourceSize.y );
-  _pausesprite.setPosition( Vector2f( _pauserect.left - _pauserect.width, _pauserect.top + _pauserect.height ) );
+  _pausesprite.setPosition( Vector2f( _pauserect.left + _pauserect.width, _pauserect.top + _pauserect.height * 2 ) );
   _pausesprite.setScale( pausescale );
   window.draw( _pausesprite );
 
   // Restore game view after rendering GUI.
   window.setView( oldview );
-
-  Scene::Render();
-  ls::render( window );
-  
 }
 
 void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
