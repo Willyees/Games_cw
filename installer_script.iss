@@ -35,7 +35,7 @@ Source: "C:\Users\SuperUser\Documents\SCHOOL\Year 3\GamesEng\cw_build\bin\Releas
 Source: "C:\Users\SuperUser\Documents\SCHOOL\Year 3\GamesEng\cw_build\bin\Release\sfml-network-2.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\SuperUser\Documents\SCHOOL\Year 3\GamesEng\cw_build\bin\Release\sfml-system-2.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\SuperUser\Documents\SCHOOL\Year 3\GamesEng\cw_build\bin\Release\sfml-window-2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\SuperUser\Documents\SCHOOL\Year 3\GamesEng\cw_build\bin\Release\res\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\SuperUser\Documents\SCHOOL\Year 3\GamesEng\cw_build\bin\Release\res\*"; DestDir: "{app}\res"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

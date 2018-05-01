@@ -740,7 +740,7 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 
 }
 
-const std::string savepath = "level1.save";
+const std::string savepath = "C:\\Users\\SuperUser\\Documents\\My Games\\level1.save";
 
 void Level1Scene::SaveState()
 {
