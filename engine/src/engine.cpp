@@ -196,7 +196,7 @@ void Scene::setBackground(sf::Sprite& background)
 	_background.reset();
 	_background = make_shared<Sprite>(background);
 }
-
+void Scene::UnlockNextScene() { _nextSceneUnlocked = true; }
 bool Scene::isLoaded() const {
   {
     std::lock_guard<std::mutex> lck(_loaded_mtx);

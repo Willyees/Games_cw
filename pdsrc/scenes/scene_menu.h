@@ -8,6 +8,7 @@ private:
 	std::vector<sf::Vector2f> posMenuItems;
 public:
 	sf::Music theme;
+	
 
   MenuScene() = default;
   ~MenuScene() override = default;

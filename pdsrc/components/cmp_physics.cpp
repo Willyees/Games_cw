@@ -42,7 +42,7 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn, const Vector2f& size, bo
 	 
 
 	
-	//Entity* ent = static_cast<Entity*>(_body->GetUserData());
+	
 	BodyDef.bullet = true;
 	b2PolygonShape shape1;
 	shape1.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
@@ -57,7 +57,7 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn, const Vector2f& size, bo
 	//_fixture->SetRestitution(.9)
 	FixtureDef.restitution = .2;
 	
-	{
+	
 		b2PolygonShape poly;
 		poly.SetAsBox(0.45f, 1.4f);
 		b2FixtureDef FixtureDefPoly;
@@ -66,15 +66,15 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn, const Vector2f& size, bo
 		
 		_body->CreateFixture(&FixtureDefPoly);
 
-	}
-	{
+	
+	
 		b2CircleShape circle;
 		circle.m_radius = 0.2f;
 		circle.m_p.Set(0, -1.4f);
 		b2FixtureDef FixtureDefCircle;
 		FixtureDefCircle.shape = &circle;
 		_body->CreateFixture(&FixtureDefCircle);
-	}
+	
 	_body->SetUserData(p);
 }
 

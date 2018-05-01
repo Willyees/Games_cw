@@ -51,6 +51,7 @@ enum EntityType
 	OIL,
 	POWERUP,
 	INVISWALL,
+	PORTAL
 };
 class Entity {
   friend struct EntityManager;

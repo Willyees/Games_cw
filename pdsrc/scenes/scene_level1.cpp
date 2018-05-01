@@ -9,6 +9,7 @@
 #include "../components/cmp_powerup.h"
 #include "../components/cmp_get_hurt_by_player.h"
 #include "../components/cmp_change_state_close_player.h"
+#include "../components/cmp_unlock_next_scene.h"
 #include "../game.h"
 #include <LevelSystem.h>
 #include <iostream>
@@ -31,7 +32,7 @@ static shared_ptr<Texture> background_text;
 static shared_ptr<Entity> masher;
 static shared_ptr<Entity> enemy_temp;
 
-void Level1Scene::UnlockNextScene() { _nextSceneUnlocked = true; }
+
 
 void Level1Scene::Load() {
 	menu.theme.stop();
@@ -63,8 +64,7 @@ void Level1Scene::Load() {
 		//test->addComponent<PlayerPhysicsComponent>(Vector2f(50.f, 50.f));
 
   }
-
-
+  
   // Create player
   {
 	  player = makeEntity(true);
@@ -204,7 +204,7 @@ void Level1Scene::Load() {
 		  s->addSprite("idle", b, a);
 
 		  oil_temp->entityType = EntityType::OIL;
-		  auto phy = oil_temp->addComponent<PhysicsComponent>(false, Vector2f(50.0f, 50.0f));
+		  auto phy = oil_temp->addComponent<PhysicsComponent>(false, Vector2f(50.0f, 40.0f));
 		  oil_temp->addComponent<HurtComponent>();
 		  phy->setRestitution(0.0f);
 		 
@@ -227,15 +227,41 @@ void Level1Scene::Load() {
 		  shared_ptr<Entity> f_temp = makeEntity(true);
 		  f_temp->setPosition(pos);
 		  auto s = f_temp->addComponent<SpriteComponent>();
-		  f_temp->addComponent<PowerUpComponent>();
+		  auto power = f_temp->addComponent<PowerUpComponent>();
 		  s->setSprite(Sprite(*(s->setTexture(p)),IntRect(0,0,50,50)));//adding texture internally and giving it to the animation as well
 		  AnimatedSprite b(sf::seconds(0.1f), true, true);
 
 
 		  f_temp->entityType = EntityType::POWERUP;
-		  //auto phy = f_temp->addComponent<PhysicsComponent>(false, Vector2f(40.0f, 40.0f));
+		  //load player textures
 		  
-		  //phy->setRestitution(0.0f);
+			vector<Texture> temp;
+			Texture p;
+			p.loadFromFile("res/images/player_sprites/walk_right.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites/walk_right.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites/walk_left_1.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites/jumpL.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites/jumpR.png");
+			temp.push_back(p);
+			power->addTextures(temp);
+			temp.clear();
+
+			p.loadFromFile("res/images/player_sprites2/swalk_right.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites2/swalk_right.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites2/swalk_left_1.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites2/sjumpL.png");
+			temp.push_back(p);
+			p.loadFromFile("res/images/player_sprites2/sjumpR.png");
+			temp.push_back(p);
+			power->addTextures(temp);
+		  
 	  }
   }
   //add blade obstacle
@@ -356,7 +382,7 @@ void Level1Scene::Load() {
 	  auto life = makeEntity(false);
 	  life->entityType = EntityType::LIFE;
 	  life->addTag("life");
-	  life->setPosition(Vector2f(Engine::getWindowSize().x - 600, 80));
+	  life->setPosition(Vector2f(Engine::getWindowSize().x - 300, 80));
 	  auto s = life->addComponent<SpriteComponentRepeted>(player->get_components<LifeComponent>()[0]->getLives());
 	  s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 100, 80)));//adding texture internally and giving it to the animation as well
 	  AnimatedSprite b(sf::seconds(0.1f), true, true);
@@ -391,28 +417,12 @@ void Level1Scene::Load() {
 	  }
 		  
   }
-  //TODO: find key sprite and fix all the sizes.
+  
   //Key
   {
 	  Texture p;
 	  p.loadFromFile("res/images/key.png");
 	  auto keys = ls::findTiles(ls::KEY);
-	  for (auto k : keys) {
-		  Vector2f pos = ls::getTilePosition(k);
-		  pos += Vector2f(8.0f, 8.0f);
-		  shared_ptr<Entity> k = makeEntity(true);
-		  k->setPosition(pos);
-		  auto s = k->addComponent<SpriteComponent>();
-		  s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 50, 50)));
-		  s->getSprite().setOrigin(Vector2f(25.0f, 25.0f));
-		  k->addComponent<GetHurtByPlayerComponent>();
-		  //add component which will set scene _nextSceneUnlocked to true when destroyed or touched
-	  }
-  }
-  {
-	  Texture p;
-	  p.loadFromFile("res/images/portal.png");
-	  auto keys = ls::findTiles(ls::PORTAL);
 	  for (auto k : keys) {
 		  Vector2f pos = ls::getTilePosition(k);
 		  pos += Vector2f(25.0f, 25.0f);
@@ -421,6 +431,25 @@ void Level1Scene::Load() {
 		  auto s = k->addComponent<SpriteComponent>();
 		  s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 50, 50)));
 		  s->getSprite().setOrigin(Vector2f(25.0f, 25.0f));
+		  k->entityType = EntityType::KEY;
+		  k->addComponent<GetHurtByPlayerComponent>();
+		  k->addComponent<UnlockNextSceneComponent>();
+		  //add component which will set scene _nextSceneUnlocked to true when destroyed or touched
+	  }
+  }
+  {
+	  Texture p;
+	  p.loadFromFile("res/images/portal.png");
+	  auto portals = ls::findTiles(ls::PORTAL);
+	  for (auto por : portals) {
+		  Vector2f pos = ls::getTilePosition(por);
+		  pos += Vector2f(25.0f, 25.0f);
+		  shared_ptr<Entity> k = makeEntity(true);
+		  k->setPosition(pos);
+		  auto s = k->addComponent<SpriteComponent>();
+		  s->setSprite(Sprite(*(s->setTexture(p)), IntRect(0, 0, 50, 50)));
+		  s->getSprite().setOrigin(Vector2f(25.0f, 25.0f));
+		  k->entityType = EntityType::PORTAL;
 		  //add component which will set scene _nextSceneUnlocked to true when destroyed or touched
 	  }
   }
@@ -541,8 +570,8 @@ void Level1Scene::Update(const double& dt) {
 	else { mouse_released = true; }
 	
   if (ls::getTileAt(player->getPosition()) == ls::PORTAL && _nextSceneUnlocked == true) {
-	 
-    //
+	  Engine::ChangeScene((Scene*)&menu);
+	  return;
   }
 
   if (Keyboard::isKeyPressed(Keyboard::Num3)) {//almost make it invicible
@@ -643,7 +672,7 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 			break;
 		}
 		break;
-	
+
 
 	case EntityType::COIN:
 		switch (entityB->entityType)
@@ -673,7 +702,7 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 	default:
 		break;
 	}
-		
+
 	switch (entityB->entityType)
 	{
 	case EntityType::COIN:
@@ -684,8 +713,8 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 			Engine::getActiveScene()->addScore(10);
 			break;
 
-			default:
-				break;
+		default:
+			break;
 		}
 		break;
 	case EntityType::BULLET:
@@ -695,7 +724,7 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 			entityA->get_components<LifeComponent>().front()->reduceLives();
 			entityB->get_components<PhysicsComponent>()[0]->dampen(Vector2f(0.0f, 0.0f));
 			entityB->setForDelete();
-			
+
 			break;
 		case EntityType::WALL:
 			entityB->setForDelete();
@@ -704,11 +733,11 @@ void Level1Scene::collisionHandler(Entity * entityA, Entity * entityB)
 			break;
 		}
 		break;
-	
+
 	default:
 		break;
 	}
-		
+
 }
 
 const std::string savepath = "level1.save";

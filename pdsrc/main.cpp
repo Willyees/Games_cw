@@ -12,7 +12,7 @@ OptionScene optionScene;
 //Level2Scene level2;
 //Level3Scene level3;
 
-int main() {
+int WinMain() {
 
   Engine::Start(800, 600, "Potato's Destiny",&menu);
 

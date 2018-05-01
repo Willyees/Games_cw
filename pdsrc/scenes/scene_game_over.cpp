@@ -37,11 +37,13 @@ void GameOverScene::UnLoad()
 
 void GameOverScene::Update(const double & dt)
 {
-	float timer = 0;
+	static float timer = 0;
 	timer += dt;
-	if(timer > 3.0f) 
+	
+	if(timer > 3.0f) {
 		Engine::ChangeScene((Scene*)&menu);
-
+		theme.stop();
+	}
 	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 		Engine::GetWindow().close();
 	}

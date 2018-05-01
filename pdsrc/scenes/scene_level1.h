@@ -7,9 +7,7 @@
 class Level1Scene : public Scene {
 private:
 	sf::Music theme;
-	bool _nextSceneUnlocked = false;
-
-
+	
 	// whether game is paused.
 	bool _paused = false;
 
@@ -43,8 +41,8 @@ private:
 	void SaveState();
 
 public:
-  void UnlockNextScene();
-  void Load() override;
+  
+ void Load() override;
 
   void UnLoad() override;
 

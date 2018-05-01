@@ -24,15 +24,16 @@ public:
   std::shared_ptr<sf::Sprite> getBackground();
   void setBackground(sf::Sprite& background);
   bool isLoaded() const;
+  void UnlockNextScene();
+
   std::shared_ptr<Entity> makeEntity(bool dynamic);
-  
   EntityManager ents;
   sf::Vector2f mouse_pos;
 protected:
 	int scorePoints;
 	std::shared_ptr<sf::Sprite> _background;
 	void setLoaded(bool);
-  
+	bool _nextSceneUnlocked = false;
 private:
   mutable bool _loaded;
   mutable std::future<void> _loaded_future;
